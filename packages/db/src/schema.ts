@@ -7,3 +7,21 @@ export const sources = pgTable("sources", {
   url: text("url").notNull().unique(),
   ...timestamps,
 });
+
+export const status = pgTable("status", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 20 }).notNull().unique(),
+  ...timestamps,
+});
+
+export const skills = pgTable("skills", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 80 }).notNull().unique(),
+  ...timestamps,
+});
+
+export const company = pgTable("company", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 80 }).notNull().unique(),
+  ...timestamps,
+});

@@ -1,9 +1,10 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
-import * as schema from './schema';
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "./schema";
+import { env } from "./env";
 
-// This is the main client that other packages will import.
-export const client = postgres(process.env.DATABASE_URL!);
+// Disable prefetch as it is not supported for "Transaction" pool mode
+const client = postgres(env.DATABASE_URL, { prepare: false });
 export const db = drizzle(client, { schema });
 
 // This type definition can be useful for other packages to infer types.

@@ -1,17 +1,8 @@
-import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+// packages/db/src/schema.ts
+import { integer, pgTable, text, varchar } from "drizzle-orm/pg-core";
 
-export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+export const sources = pgTable("sources", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 180 }).notNull(),
+  url: text("url").notNull().unique(),
 });
-
-// You can add more tables and relations here
-// export const posts = pgTable('posts', {
-//   id: serial('id').primaryKey(),
-//   title: text('title').notNull(),
-//   content: text('content'),
-//   userId: integer('user_id').references(() => users.id),
-//   createdAt: timestamp('created_at').defaultNow().notNull(),
-// });

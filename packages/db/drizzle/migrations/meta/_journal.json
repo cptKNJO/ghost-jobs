@@ -8,6 +8,20 @@
       "when": 1775309441927,
       "tag": "0000_stormy_pandemic",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775315020210,
+      "tag": "0001_majestic_young_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775315079923,
+      "tag": "0002_blue_jazinda",
+      "breakpoints": true
     }
   ]
 }

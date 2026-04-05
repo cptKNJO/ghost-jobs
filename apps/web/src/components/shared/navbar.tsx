@@ -40,7 +40,7 @@ export function Navbar() {
 
           <div className="ml-auto flex items-center gap-4">
             <Link href="/login">
-              <Button variant="ghost">Login</Button>
+              <Button>Login</Button>
             </Link>
           </div>
         </div>

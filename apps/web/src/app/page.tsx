@@ -1,15 +1,15 @@
-import { Button } from "@repo/ui";
-import { db, users } from "@repo/db";
+import { Button } from "@repo/ui/components/button";
+// import { db, users } from "@repo/db";
 
 export default async function Home() {
   // Try to fetch users from DB to demonstrate integration (will fail without proper DB URL)
   let userCount = 0;
-  try {
-    const allUsers = await db.select().from(users);
-    userCount = allUsers.length;
-  } catch (e) {
-    console.error("Database connection failed, check DATABASE_URL", e);
-  }
+  // try {
+  //   const allUsers = await db.select().from(users);
+  //   userCount = allUsers.length;
+  // } catch (e) {
+  //   console.error("Database connection failed, check DATABASE_URL", e);
+  // }
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center min-h-screen bg-zinc-50 dark:bg-black p-8 font-sans">

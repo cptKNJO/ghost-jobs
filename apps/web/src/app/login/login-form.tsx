@@ -45,7 +45,7 @@ export default function LoginForm() {
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
-            We've sent a magic link to your email address.
+            We&apos;ve sent a magic link to your email address.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -88,7 +88,7 @@ export default function LoginForm() {
             />
             {error && <FieldError>{error}</FieldError>}
             <FieldDescription>
-              We'll send a login link to this email.
+              We&apos;ll send a login link to this email.
             </FieldDescription>
           </Field>
         </CardContent>

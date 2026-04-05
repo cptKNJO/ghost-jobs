@@ -13,9 +13,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx", // THIS IS THE FIX
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-    },
+    "paths": {},
   },
   "include": ["src"],
   "exclude": ["node_modules"],

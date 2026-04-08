@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, LayoutDashboard, Calendar, BarChart3 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { Button } from "@repo/ui/components/button";
-import { Card } from "@repo/ui/components/card";
 
 export default function Home() {
   return (
@@ -30,82 +29,6 @@ export default function Home() {
           <Button variant="outline" size="lg" className="h-12 px-8">
             View Demo
           </Button>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 space-y-12">
-        <div className="flex flex-col items-center text-center gap-4">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
-            Everything you need to scale your hunt
-          </h2>
-          <p className="max-w-[42rem] text-muted-foreground sm:text-lg">
-            Powerful tools designed to give you an edge in the competitive tech
-            market.
-          </p>
-        </div>
-        <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-          <Card className="flex flex-col items-center text-center p-8 gap-4 bg-muted/50 border-none">
-            <div className="p-3 rounded-xl bg-primary/10 text-primary">
-              <LayoutDashboard className="h-6 w-6" />
-            </div>
-            <h3 className="font-bold text-xl">Kanban Board</h3>
-            <p className="text-sm text-muted-foreground">
-              Visualize your pipeline. Drag and drop applications from
-              &quot;Applied&quot; to &quot;Interview&quot; and
-              &quot;Offer&quot;.
-            </p>
-          </Card>
-          <Card className="flex flex-col items-center text-center p-8 gap-4 bg-muted/50 border-none">
-            <div className="p-3 rounded-xl bg-primary/10 text-primary">
-              <Calendar className="h-6 w-6" />
-            </div>
-            <h3 className="font-bold text-xl">Smart Reminders</h3>
-            <p className="text-sm text-muted-foreground">
-              Never miss a follow-up. Get automated notifications for interviews
-              and deadline responses.
-            </p>
-          </Card>
-          <Card className="flex flex-col items-center text-center p-8 gap-4 bg-muted/50 border-none">
-            <div className="p-3 rounded-xl bg-primary/10 text-primary">
-              <BarChart3 className="h-6 w-6" />
-            </div>
-            <h3 className="font-bold text-xl">AI Insights</h3>
-            <p className="text-sm text-muted-foreground">
-              Analyze your performance. Get data-driven advice on how to improve
-              your interview conversion rates.
-            </p>
-          </Card>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="border-y bg-muted/30 py-16">
-        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div className="flex flex-col items-center text-center gap-2">
-            <span className="text-4xl font-bold">10k+</span>
-            <span className="text-sm text-muted-foreground uppercase tracking-wider font-medium">
-              Applications
-            </span>
-          </div>
-          <div className="flex flex-col items-center text-center gap-2">
-            <span className="text-4xl font-bold">500+</span>
-            <span className="text-sm text-muted-foreground uppercase tracking-wider font-medium">
-              Active Users
-            </span>
-          </div>
-          <div className="flex flex-col items-center text-center gap-2">
-            <span className="text-4xl font-bold">98%</span>
-            <span className="text-sm text-muted-foreground uppercase tracking-wider font-medium">
-              Satisfaction
-            </span>
-          </div>
-          <div className="flex flex-col items-center text-center gap-2">
-            <span className="text-4xl font-bold">24/7</span>
-            <span className="text-sm text-muted-foreground uppercase tracking-wider font-medium">
-              Support
-            </span>
-          </div>
         </div>
       </section>
 

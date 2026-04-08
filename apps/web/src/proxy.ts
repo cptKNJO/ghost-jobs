@@ -1,23 +1,11 @@
-// src/proxy.ts
-import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { type NextRequest } from "next/server";
+import { updateSession } from "./utils/supabase/proxy";
 
-export async function proxy(request: Request) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { pathname } = new URL(request.url);
-
-  // Protect the dashboard
-  if (!user && pathname.startsWith("/dashboard")) {
-    return Response.redirect(new URL("/login", request.url));
-  }
-
-  // Prevent logged-in users from seeing the login page
-  if (user && pathname === "/login") {
-    return Response.redirect(new URL("/dashboard", request.url));
-  }
-
-  return NextResponse.next();
+export async function proxy(request: NextRequest) {
+  return await updateSession(request);
 }
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};

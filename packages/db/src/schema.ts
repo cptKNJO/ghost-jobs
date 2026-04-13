@@ -8,7 +8,7 @@ export const sources = pgTable("sources", {
   ...timestamps,
 });
 
-export const status = pgTable("status", {
+export const statuses = pgTable("statuses", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 20 }).notNull().unique(),
   ...timestamps,
@@ -20,7 +20,7 @@ export const skills = pgTable("skills", {
   ...timestamps,
 });
 
-export const company = pgTable("company", {
+export const company = pgTable("companies", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 80 }).notNull().unique(),
   ...timestamps,

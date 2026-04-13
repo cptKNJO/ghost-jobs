@@ -29,6 +29,20 @@
       "when": 1775315789872,
       "tag": "0003_spooky_supernaut",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1776085278373,
+      "tag": "0004_rename-company-status",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1776089319862,
+      "tag": "0005_update-triggers",
+      "breakpoints": true
     }
   ]
 }

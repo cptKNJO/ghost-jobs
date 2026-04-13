@@ -2,8 +2,8 @@
   "private": true,
   "scripts": {
     "dev": "turbo dev --filter=web",
+    "dev:supa": "turbo dev --filter=@repo/supabase",
     "dev:all": "turbo dev",
-    "dev:mobile": "turbo dev --filter=mobile",
     "build": "turbo run build",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore"

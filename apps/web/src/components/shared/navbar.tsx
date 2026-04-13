@@ -1,6 +1,10 @@
+import { getUser } from "@/app/lib/dal/auth";
+import { Button } from "@repo/ui/components/button";
 import Link from "next/link";
 
-export function Navbar({ children }: { children: React.ReactNode }) {
+export async function Navbar() {
+  const user = await getUser();
+
   return (
     <header className="w-full bg-background/95">
       <div className="container flex h-16 items-center justify-between mx-auto px-4">
@@ -11,7 +15,17 @@ export function Navbar({ children }: { children: React.ReactNode }) {
             </span>
           </Link>
 
-          <div className="ml-auto flex items-center gap-4">{children}</div>
+          <div className="ml-auto flex items-center gap-4">
+            {user ? (
+              <form action="/auth/signout" method="post">
+                <Button type="submit">Logout</Button>
+              </form>
+            ) : (
+              <Link href="/login">
+                <Button>Login</Button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </header>

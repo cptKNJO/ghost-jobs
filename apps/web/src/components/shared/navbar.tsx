@@ -17,9 +17,16 @@ export async function Navbar() {
 
           <div className="ml-auto flex items-center gap-4">
             {user ? (
-              <form action="/auth/signout" method="post">
-                <Button type="submit">Logout</Button>
-              </form>
+              <>
+                <Link href="/dashboard">
+                  <Button variant="ghost">Dashboard</Button>
+                </Link>
+                <form action="/auth/signout" method="post">
+                  <Button type="submit" variant="outline">
+                    Logout
+                  </Button>
+                </form>
+              </>
             ) : (
               <Link href="/login">
                 <Button>Login</Button>

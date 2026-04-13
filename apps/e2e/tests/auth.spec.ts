@@ -48,6 +48,7 @@ test.describe("Authentication Flow", () => {
     // 5. Verify redirection to Dashboard
     await expect(page).toHaveURL(/\/dashboard/);
     await expect(page.getByText(/you are logged in!/i)).toBeVisible();
+    await expect(page.getByRole("link", { name: /dashboard/i })).toBeVisible();
   });
 
   test("should allow a signed-in user to log out", async ({ page }) => {

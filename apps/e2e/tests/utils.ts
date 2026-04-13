@@ -1,4 +1,4 @@
-import { expect } from "@playwright/test";
+// TODO: Refactor this function
 
 const MAILPIT_API = "http://localhost:54324/api/v1";
 
@@ -7,10 +7,8 @@ export async function getLatestMagicLink(email: string): Promise<string> {
   const searchUrl = `${MAILPIT_API}/search?query=to:${encodeURIComponent(email)}`;
 
   // We might need to retry a few times as the email might take a second to arrive
-  // TODO: Fix the part below to work - running 5 times for 1000 seconds is flaky!
   let messageId = "";
   for (let i = 0; i < 5; i++) {
-    console.log(searchUrl);
     const response = await fetch(searchUrl);
     if (!response.ok) {
       throw new Error(`Failed to search Mailpit: ${response.statusText}`);
@@ -40,8 +38,6 @@ export async function getLatestMagicLink(email: string): Promise<string> {
 
   const messageData = await response.json();
   const html = messageData.HTML || "";
-  console.log(messageUrl);
-  console.log(messageData);
 
   // 3. Extract the confirmation link
   const linkRegex = /href="([^"]*token_hash=[^"]*)"/;

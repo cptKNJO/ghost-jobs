@@ -88,4 +88,14 @@ test.describe("Authentication Flow", () => {
     const loginButton = page.getByRole("button", { name: /login/i });
     await expect(loginButton).toBeVisible();
   });
+
+  test("should redirect unauthenticated user from dashboard to login page", async ({
+    page,
+  }) => {
+    await page.goto("/dashboard");
+
+    // Expect to be redirected to the login page
+    await expect(page).toHaveURL(/\/login/);
+    await expect(page.getByRole("heading", { name: /login/i })).toBeVisible();
+  });
 });

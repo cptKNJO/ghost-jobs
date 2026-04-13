@@ -49,4 +49,43 @@ test.describe("Authentication Flow", () => {
     await expect(page).toHaveURL(/\/dashboard/);
     await expect(page.getByText(/you are logged in!/i)).toBeVisible();
   });
+
+  test("should allow a signed-in user to log out", async ({ page }) => {
+    const testEmail = `logout-${Date.now()}@example.com`;
+
+    // 1. Request Magic Link
+    await page.goto("/login");
+    const emailInput = page.getByLabel(/email/i);
+    await emailInput.fill(testEmail);
+
+    const submitButton = page.getByRole("button", { name: /send magic link/i });
+    await submitButton.click();
+    await expect(page.getByText(/check your email/i)).toBeVisible();
+
+    // 2. Fetch Magic Link from Mailpit
+    let magicLink: string;
+    try {
+      magicLink = await getLatestMagicLink(testEmail);
+    } catch (error) {
+      console.error(
+        "Mailpit retrieval failed. Is Supabase local stack running?",
+      );
+      throw error;
+    }
+
+    // 3. Follow Magic Link to log in
+    await page.goto(magicLink);
+    await expect(page).toHaveURL(/\/dashboard/);
+    await expect(page.getByText(/you are logged in!/i)).toBeVisible();
+
+    // 4. Click Logout button
+    const logoutButton = page.getByRole("button", { name: /logout/i });
+    await expect(logoutButton).toBeVisible();
+    await logoutButton.click();
+
+    // 5. Verify redirection to login page and "Login" button visibility
+    await expect(page).toHaveURL(/\/login/);
+    const loginButton = page.getByRole("button", { name: /login/i });
+    await expect(loginButton).toBeVisible();
+  });
 });

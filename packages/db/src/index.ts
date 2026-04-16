@@ -1,2 +1,2 @@
-export * from './schema';
-export * from './client';
+export { eq } from "drizzle-orm";
+export { db } from "./client";

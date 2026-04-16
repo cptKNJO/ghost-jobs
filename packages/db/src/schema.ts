@@ -40,7 +40,7 @@ const authSchema = pgSchema("auth");
 // This is required to refer to this non-public Supabase table to be
 // "seen" by drizzle. If we don't bring in the auth table like this,
 // we have to manually  migrate for creating an FK constraint on profile.
-export const usersInAuth = authSchema.table("users", {
+const usersInAuth = authSchema.table("users", {
   id: uuid("id").primaryKey(),
 });
 

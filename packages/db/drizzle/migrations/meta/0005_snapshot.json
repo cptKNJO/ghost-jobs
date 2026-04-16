@@ -4,8 +4,8 @@
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.company": {
-      "name": "company",
+    "public.companies": {
+      "name": "companies",
       "schema": "",
       "columns": {
         "id": {
@@ -14,7 +14,7 @@
           "primaryKey": true,
           "notNull": true,
           "identity": {
-            "name": "company_id_seq",
+            "name": "companies_id_seq",
             "increment": "1",
             "minValue": "1",
             "maxValue": "2147483647",
@@ -50,11 +50,9 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "company_name_unique": {
-          "name": "company_name_unique",
-          "columns": [
-            "name"
-          ],
+        "companies_name_unique": {
+          "name": "companies_name_unique",
+          "columns": ["name"],
           "nullsNotDistinct": false
         }
       },
@@ -110,9 +108,7 @@
       "uniqueConstraints": {
         "skills_name_unique": {
           "name": "skills_name_unique",
-          "columns": [
-            "name"
-          ],
+          "columns": ["name"],
           "nullsNotDistinct": false
         }
       },
@@ -174,9 +170,7 @@
       "uniqueConstraints": {
         "sources_url_unique": {
           "name": "sources_url_unique",
-          "columns": [
-            "url"
-          ],
+          "columns": ["url"],
           "nullsNotDistinct": false
         }
       },
@@ -184,8 +178,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.status": {
-      "name": "status",
+    "public.statuses": {
+      "name": "statuses",
       "schema": "",
       "columns": {
         "id": {
@@ -194,7 +188,7 @@
           "primaryKey": true,
           "notNull": true,
           "identity": {
-            "name": "status_id_seq",
+            "name": "statuses_id_seq",
             "increment": "1",
             "minValue": "1",
             "maxValue": "2147483647",
@@ -230,11 +224,9 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "status_name_unique": {
-          "name": "status_name_unique",
-          "columns": [
-            "name"
-          ],
+        "statuses_name_unique": {
+          "name": "statuses_name_unique",
+          "columns": ["name"],
           "nullsNotDistinct": false
         }
       },

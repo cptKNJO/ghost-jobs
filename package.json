@@ -4,6 +4,8 @@
     "dev": "turbo dev --filter=web",
     "dev:supa": "turbo dev --filter=@repo/supabase",
     "dev:all": "turbo dev",
+    "test:e2e": "pnpm --filter e2e test",
+    "test:e2e:ui": "pnpm --filter e2e test:ui",
     "build": "turbo run build",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore"

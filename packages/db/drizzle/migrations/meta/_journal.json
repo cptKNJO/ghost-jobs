@@ -43,6 +43,13 @@
       "when": 1776089319862,
       "tag": "0005_update-triggers",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776329567324,
+      "tag": "0006_yellow_mister_sinister",
+      "breakpoints": true
     }
   ]
 }

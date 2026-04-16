@@ -8,6 +8,9 @@ export default defineConfig({
   dbCredentials: {
     url: env.DATABASE_URL,
   },
+  // CRITICAL: Tell Drizzle to ONLY manage the public schema.
+  // This prevents it from trying to 'create' the auth schema.
+  schemaFilter: ["public"],
   verbose: true,
   strict: true,
 });

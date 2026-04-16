@@ -1,4 +1,11 @@
-import { integer, pgTable, text, varchar } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgSchema,
+  pgTable,
+  text,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { timestamps } from "./schema-helpers";
 
 export const sources = pgTable("sources", {
@@ -20,8 +27,33 @@ export const skills = pgTable("skills", {
   ...timestamps,
 });
 
-export const company = pgTable("companies", {
+export const companies = pgTable("companies", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 80 }).notNull().unique(),
+  ...timestamps,
+});
+
+// Auth
+// Reference the existing Supabase 'auth' schema
+const authSchema = pgSchema("auth");
+
+// This is required to refer to this non-public Supabase table to be
+// "seen" by drizzle. If we don't bring in the auth table like this,
+// we have to manually  migrate for creating an FK constraint on profile.
+export const usersInAuth = authSchema.table("users", {
+  id: uuid("id").primaryKey(),
+});
+
+export const profiles = pgTable("profiles", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  userId: uuid("user_id")
+    .notNull()
+    .unique()
+    .references(() => usersInAuth.id, { onDelete: "cascade" }),
+  displayName: varchar("display_name", {
+    length: 50,
+  })
+    .notNull()
+    .unique(),
   ...timestamps,
 });

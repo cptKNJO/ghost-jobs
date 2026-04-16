@@ -90,6 +90,64 @@ test.describe("Authentication Flow", () => {
     await expect(loginButton).toBeVisible();
   });
 
+  test("should maintain the same display name across logins", async ({
+    page,
+  }) => {
+    const testEmail = `persistent-${Date.now()}@example.com`;
+
+    // 1. First login
+    await page.goto("/login");
+    await page.getByLabel(/email/i).fill(testEmail);
+    await page.getByRole("button", { name: /send magic link/i }).click();
+    const firstMagicLink = await getLatestMagicLink(testEmail);
+    await page.goto(firstMagicLink);
+    await expect(page).toHaveURL(/\/dashboard/);
+
+    // Capture display name
+    const textContent = await page.locator("body").textContent();
+    const displayNameMatch = textContent?.match(
+      /(?<=You are logged in, )[^!]+/,
+    );
+    const firstDisplayName = displayNameMatch ? displayNameMatch[1] : null;
+    expect(firstDisplayName).not.toBeNull();
+
+    // 2. Logout
+    await page.getByRole("button", { name: /logout/i }).click();
+    await expect(page).toHaveURL(/\/login/);
+
+    // 3. Second login
+    await page.getByLabel(/email/i).fill(testEmail);
+    await page.getByRole("button", { name: /send magic link/i }).click();
+
+    // Poll until a new, different magic link is available
+    let secondMagicLink: string;
+    const startTime = Date.now();
+    while (true) {
+      secondMagicLink = await getLatestMagicLink(testEmail);
+      if (secondMagicLink !== firstMagicLink) break;
+      if (Date.now() - startTime > 10000)
+        throw new Error("Timed out waiting for new magic link");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
+    // Verify magic links are different
+    expect(secondMagicLink).not.toBe(firstMagicLink);
+
+    await page.goto(secondMagicLink);
+    await expect(page).toHaveURL(/\/dashboard/);
+    // 4. Verify same display name
+
+    const newTextContent = await page.locator("body").textContent();
+    const newDisplayNameMatch = newTextContent?.match(
+      /(?<=You are logged in, )[^!]+/,
+    );
+    const secondDisplayName = newDisplayNameMatch
+      ? newDisplayNameMatch[1]
+      : null;
+
+    expect(secondDisplayName).toBe(firstDisplayName);
+  });
+
   test("should redirect unauthenticated user from dashboard to login page", async ({
     page,
   }) => {

@@ -1,0 +1,1 @@
+DELETE FROM drizzle.__drizzle_migrations;

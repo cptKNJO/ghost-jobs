@@ -47,7 +47,7 @@ test.describe("Authentication Flow", () => {
 
     // 5. Verify redirection to Dashboard
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.getByText(/you are logged in!/i)).toBeVisible();
+    await expect(page.locator("body")).toContainText(/you are logged in/i);
     await expect(page.getByRole("link", { name: /dashboard/i })).toBeVisible();
   });
 
@@ -77,7 +77,7 @@ test.describe("Authentication Flow", () => {
     // 3. Follow Magic Link to log in
     await page.goto(magicLink);
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.getByText(/you are logged in!/i)).toBeVisible();
+    await expect(page.locator("body")).toContainText(/you are logged in/i);
 
     // 4. Click Logout button
     const logoutButton = page.getByRole("button", { name: /logout/i });

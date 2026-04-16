@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1776341872601,
+      "tag": "20260416121752_icy_steve_rogers",
+      "breakpoints": true
+    }
+  ]
+}

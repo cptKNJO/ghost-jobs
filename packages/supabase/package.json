@@ -7,7 +7,8 @@
     "dev": "SUPABASE_TELEMETRY_DISABLED=1 supabase start",
     "stop": "supabase stop",
     "status": "supabase status",
-    "reset": "supabase db reset"
+    "reset": "supabase db reset",
+    "migration": "supabase migration"
   },
   "packageManager": "pnpm@10.33.0",
   "devDependencies": {

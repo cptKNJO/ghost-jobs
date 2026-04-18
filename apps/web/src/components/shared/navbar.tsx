@@ -6,7 +6,7 @@ export async function Navbar() {
   const user = await getUser();
 
   return (
-    <header className="w-full bg-background/95">
+    <header className="w-full bg-background border-b">
       <div className="container flex h-16 items-center justify-between mx-auto px-4">
         <div className="w-full flex items-center gap-6">
           <Link href="/" className="flex items-center space-x-2">

@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-20 py-10">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 flex flex-col items-center text-center gap-8 py-20">
+      <section className="flex flex-col items-center text-center gap-8 py-20">
         <div className="inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium text-muted-foreground animate-in fade-in slide-in-from-top-4 duration-1000">
           <span className="mr-1">✨</span>
           <span>Now in beta - Join 500+ engineers today</span>
@@ -33,7 +33,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="container mx-auto px-4 pb-20">
+      <section className="pb-20">
         <div className="relative overflow-hidden rounded-3xl bg-primary px-6 py-20 text-center text-primary-foreground sm:px-12 lg:px-16">
           <div className="relative z-10 flex flex-col items-center gap-8">
             <h2 className="text-3xl font-bold tracking-tight sm:text-5xl max-w-2xl">

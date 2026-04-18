@@ -13,25 +13,31 @@ To ensure Drizzle migrations are in sync with your local Supabase PostgreSQL, fo
     ```
 
 2.  **Generate Drizzle Migrations:**
-    After making any changes to your Drizzle schema files (e.g., in `packages/db/src/schema.ts`), generate new migration files. This command compares your current schema definition with the last known migration and creates a new SQL file if differences are found:
+    After making any changes to your Drizzle schema files (e.g., in `packages/db/src/schema.ts`), generate new migration files.
+    The `@repo/db` package is configured to output migrations directly into the Supabase migration folder.
     ```bash
-    pnpm --filter db db:generate
+    pnpm --filter @repo/db generate
     ```
-    This will create a new migration file in `packages/db/drizzle/migrations/`.
+    This will create a new migration file in `packages/supabase/supabase/migrations/`.
 
-3.  **Apply Drizzle Migrations to Local Supabase:**
-    Once migrations are generated, apply them to your local PostgreSQL database:
+3.  **Apply Migrations to Local Supabase:**
+    Once migrations are generated, apply them using the Supabase CLI:
     ```bash
-    pnpm --filter db db:migrate
+    pnpm --filter @repo/supabase migration up
     ```
-    This command executes the pending SQL migration files against your database.
+    This command executes the pending SQL migration files against your local Supabase database.
 
-4.  **Verify (Optional but Recommended):**
+4.  **Reset Database (Optional):**
+    If you need to completely reset your local database and re-apply all migrations:
+    ```bash
+    pnpm --filter @repo/supabase reset
+    ```
+
+5.  **Verify (Optional but Recommended):**
     You can verify the changes by using Drizzle Studio or by checking your local Supabase Studio dashboard:
     *   **Drizzle Studio:**
         ```bash
-        pnpm --filter db db:studio
+        pnpm --filter @repo/db studio
         ```
-        This will open a web interface to inspect your database schema and data.
     *   **Supabase Studio:**
-        Navigate to your local Supabase Studio (usually `http://localhost:8000/project/_/database/tables`) in your browser to visually confirm the schema changes.
+        Navigate to your local Supabase Studio (usually `http://localhost:54323` if default) in your browser to visually confirm the schema changes.

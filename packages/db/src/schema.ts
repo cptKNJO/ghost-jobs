@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   pgSchema,
@@ -59,7 +60,12 @@ export const profiles = pgTable("profiles", {
   ...timestamps,
 });
 
+export const profileRelations = relations(profiles, ({ many }) => ({
+  jobPosts: many(jobPost),
+}));
+
 export const jobPost = pgTable("job_post", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   // FKs
   companyId: integer("company_id").references(() => companies.id),
   sourceId: integer("source_id").references(() => sources.id),
@@ -86,3 +92,22 @@ export const jobPost = pgTable("job_post", {
   role: text("role").notNull(),
   linkToPost: text("link_to_post").notNull(),
 });
+
+export const jobPostRelations = relations(jobPost, ({ one }) => ({
+  company: one(companies, {
+    fields: [jobPost.companyId],
+    references: [companies.id],
+  }),
+  source: one(sources, {
+    fields: [jobPost.sourceId],
+    references: [sources.id],
+  }),
+  status: one(statuses, {
+    fields: [jobPost.statusId],
+    references: [statuses.id],
+  }),
+  profile: one(profiles, {
+    fields: [jobPost.profileId],
+    references: [profiles.id],
+  }),
+}));

@@ -15,6 +15,13 @@
       "when": 1776507191600,
       "tag": "20260418101311_sleepy_ironclad",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776508527210,
+      "tag": "20260418103527_thick_abomination",
+      "breakpoints": true
     }
   ]
 }

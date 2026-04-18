@@ -3,6 +3,7 @@ import {
   pgSchema,
   pgTable,
   text,
+  timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -56,4 +57,32 @@ export const profiles = pgTable("profiles", {
     .notNull()
     .unique(),
   ...timestamps,
+});
+
+export const jobPost = pgTable("job_post", {
+  // FKs
+  companyId: integer("company_id").references(() => companies.id),
+  sourceId: integer("source_id").references(() => sources.id),
+  statusId: integer("status_id")
+    .notNull()
+    .references(() => statuses.id),
+  profileId: integer("profile_id")
+    .notNull()
+    .references(() => profiles.id, {
+      onDelete: "cascade",
+    }),
+
+  // Dates
+  appliedOn: timestamp("applied_on", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+  repliedOn: timestamp("replied_on", {
+    withTimezone: true,
+  }),
+
+  // Other fields
+  role: text("role").notNull(),
+  linkToPost: text("link_to_post").notNull(),
 });

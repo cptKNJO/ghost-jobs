@@ -4,7 +4,8 @@
   "exports": {
     "./globals.css": "./src/styles/globals.css",
     "./lib/*": "./src/lib/*.ts",
-    "./components/*": "./src/components/ui/*.tsx"
+    "./components/*": "./src/components/ui/*.tsx",
+    "./components/ui/*": "./src/components/ui/*.tsx"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -12,13 +13,11 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
-    "@radix-ui/react-slot": "^1.2.4",
+    "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/postcss": "^4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.7.0",
     "postcss": "^8.5.8",
-    "radix-ui": "^1.4.3",
     "shadcn": "^4.1.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4",

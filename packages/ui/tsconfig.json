@@ -13,7 +13,9 @@
     "isolatedModules": true,
     "jsx": "react-jsx", // THIS IS THE FIX
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@repo/ui/*": ["../../packages/ui/src/*"],
+    },
   },
   "include": ["src"],
   "exclude": ["node_modules"],

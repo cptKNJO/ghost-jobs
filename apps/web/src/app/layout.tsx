@@ -36,7 +36,7 @@ export default async function RootLayout({
       lang="en"
       className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="flex flex-col min-h-screen bg-background text-foreground">
         <Navbar />
         <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
         <Footer />

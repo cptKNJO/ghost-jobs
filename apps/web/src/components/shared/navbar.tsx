@@ -1,5 +1,5 @@
 import { getUser } from "@/app/lib/dal/auth";
-import { Button } from "@repo/ui/components/button";
+import { Button } from "@repo/ui/components/ui/button";
 import Link from "next/link";
 
 export async function Navbar() {

@@ -8,17 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "@repo/ui/components/dialog";
-import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
-import { Label } from "@repo/ui/components/label";
+} from "@repo/ui/components/ui/dialog";
+import { Button } from "@repo/ui/components/ui/button";
+import { Input } from "@repo/ui/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@repo/ui/components/select";
+  Combobox,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@repo/ui/components/ui/combobox";
 import { Plus } from "lucide-react";
 import { createJobPostAction } from "../actions";
 import {
@@ -30,14 +29,19 @@ import {
 } from "@tanstack/react-form-nextjs";
 import {
   Field,
-  FieldContent,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@repo/ui/components/field";
+} from "@repo/ui/components/ui/field";
 import { jobFormOpts } from "./jobFormOpts";
-import { ZodError } from "zod";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/ui/components/ui/select";
+import { DatePickerInput } from "@repo/ui/components/date-picker-input";
 
 interface AddJobPostDialogProps {
   lookupData: {
@@ -46,6 +50,11 @@ interface AddJobPostDialogProps {
     sources: any[];
   };
 }
+const companies = [
+  // { label: "Google", value: "1" },
+  // { label: "Meta", value: "2" },
+  // { label: "Amazon", value: "3" },
+];
 
 export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
   const [open, setOpen] = useState(true);
@@ -56,8 +65,6 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
     ...jobFormOpts,
     transform: useTransform((baseForm) => mergeForm(baseForm, state!), [state]),
   });
-  const formErrors = useStore(form.store, (formState) => formState.errors);
-  console.log(formErrors);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -75,7 +82,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
         <form
           action={action as never}
           onSubmit={() => form.handleSubmit()}
-          className="space-y-4 py-4"
+          className="space-y-6 pb-4"
         >
           <FieldGroup>
             {/*{formErrors.map((error, i) => (
@@ -92,6 +99,9 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                     <FieldLabel htmlFor={field.name}>
                       Role / Job Title
                     </FieldLabel>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
                     <Input
                       id={field.name}
                       name={field.name}
@@ -100,131 +110,177 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                       autoComplete="off"
                       required
                     />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
                   </Field>
                 );
               }}
             />
-            <form.Field
-              name="linkToPost"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
 
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Link to post</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      aria-invalid={isInvalid}
-                      placeholder="https://linkedin.com/jobs/..."
-                      required
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
-            />
-            <form.Field
-              name="companyId"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field orientation="responsive" data-invalid={isInvalid}>
-                    <FieldContent>
-                      <FieldLabel htmlFor="form-tanstack-select-language">
-                        Spoken Language
-                      </FieldLabel>
-                      <FieldDescription>
-                        For best results, select the language you speak.
-                      </FieldDescription>
+            <div className="grid grid-cols-2 gap-4">
+              <form.Field
+                name="linkToPost"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Link to post</FieldLabel>
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
                       )}
-                    </FieldContent>
-                    <Select name={field.name}>
-                      <SelectTrigger
-                        id="form-tanstack-select-language"
+                      <Input
+                        id={field.name}
+                        name={field.name}
                         aria-invalid={isInvalid}
-                      >
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="auto">Auto</SelectItem>
-                        <SelectItem value="en">English</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </Field>
-                );
-              }}
-            />
-
-            {/*<div className="grid gap-2">
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="companyId">Company</Label>
-                <Select name="companyId">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select company" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {lookupData.companies.map((company) => (
-                      <SelectItem
-                        key={company.id}
-                        value={company.id.toString()}
-                      >
-                        {company.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="statusId">Status</Label>
-                <Select
-                  name="statusId"
-                  required
-                  defaultValue={lookupData.statuses
-                    .find((s) => s.name === "Applied")
-                    ?.id.toString()}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {lookupData.statuses.map((status) => (
-                      <SelectItem key={status.id} value={status.id.toString()}>
-                        {status.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                        placeholder="https://linkedin.com/jobs/..."
+                        required
+                        className="mbs-auto"
+                      />
+                    </Field>
+                  );
+                }}
+              />
+              <form.Field
+                name="companyId"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field orientation="responsive" data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Company</FieldLabel>
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                      <Combobox items={companies} open>
+                        <ComboboxInput
+                          id={field.name}
+                          name={field.name}
+                          placeholder="Select a company"
+                          className="mbs-auto"
+                        />
+                        <ComboboxContent>
+                          <ComboboxList>
+                            {(item) => (
+                              <ComboboxItem key={item.label} value={item}>
+                                {item.label}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
+                    </Field>
+                  );
+                }}
+              />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="sourceId">Source</Label>
-              <Select name="sourceId">
-                <SelectTrigger>
-                  <SelectValue placeholder="Where did you find it?" />
-                </SelectTrigger>
-                <SelectContent>
-                  {lookupData.sources.map((source) => (
-                    <SelectItem key={source.id} value={source.id.toString()}>
-                      {source.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>*/}
+            <div className="grid grid-cols-2 gap-4">
+              <form.Field
+                name="sourceId"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field orientation="responsive" data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Source</FieldLabel>
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                      <Combobox items={companies} open>
+                        <ComboboxInput
+                          id={field.name}
+                          name={field.name}
+                          placeholder="Select a source"
+                          className="mbs-auto"
+                        />
+                        <ComboboxContent>
+                          <ComboboxList>
+                            {(item) => (
+                              <ComboboxItem key={item.label} value={item}>
+                                {item.label}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
+                    </Field>
+                  );
+                }}
+              />
+              <form.Field
+                name="statusId"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
+                  return (
+                    <Field orientation="responsive" data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>Status</FieldLabel>
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                      <Select name={field.name}>
+                        <SelectTrigger
+                          aria-invalid={isInvalid}
+                          className="mbs-auto"
+                        >
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="auto">Auto</SelectItem>
+                          <SelectItem value="en">English</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                  );
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <form.Field
+                name="appliedOn"
+                children={(field) => {
+                  return (
+                    <form.Field
+                      name={field.name}
+                      children={(field) => (
+                        <Field>
+                          <FieldLabel htmlFor={field.name}>
+                            Applied on
+                          </FieldLabel>
+                          <DatePickerInput
+                            id={field.name}
+                            name={field.name}
+                            defaultValue={field.state.value} // Sets initial value
+                          />
+                        </Field>
+                      )}
+                    />
+                  );
+                }}
+              />
+              <form.Field
+                name="repliedOn"
+                children={(field) => {
+                  return (
+                    <form.Field
+                      name={field.name}
+                      children={(field) => (
+                        <Field>
+                          <FieldLabel htmlFor={field.name}>
+                            Replied on
+                          </FieldLabel>
+                          <DatePickerInput
+                            id={field.name}
+                            name={field.name}
+                            defaultValue={field.state.value} // Sets initial value
+                          />
+                        </Field>
+                      )}
+                    />
+                  );
+                }}
+              />
+            </div>
           </FieldGroup>
           <DialogFooter>
             <Button

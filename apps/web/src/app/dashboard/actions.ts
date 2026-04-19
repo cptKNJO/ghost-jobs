@@ -13,26 +13,15 @@ import {
 import { z } from "zod";
 import "../lib/zod";
 
-// const jobPostSchema = z.object({
-//   role: z.string().min(3, "Role is required"),
-//   linkToPost: z.url("Must be a valid URL"),
-//   companyId: z.coerce.number().optional(),
-//   sourceId: z.coerce.number().optional(),
-//   statusId: z.coerce.number().min(1, "Status is required"),
-//   appliedOn: z.string().optional(),
-// });
 const jobPostSchema = insertJobPostSchema.extend({
-  role: z.string().min(1, "Enter a role or job title"),
+  role: z.string().min(3, "Enter a role or job title"),
   linkToPost: z.url("Enter a link to the job post"),
-
-  // // Label: "Company"
-  // companyId: z.string().min(1, "Select a company"),
-
-  // // Label: "Status"
-  // statusId: z.string().min(1, "Select a status"),
+  companyId: z.string().min(1, "Select a company"),
+  statusId: z.string().min(1, "Select a status"),
 });
 
 const serverValidate = createServerValidate({
+  // TODO: Isn't this supposed to be jobPostOptions?
   ...formOptions,
   onServerValidate: jobPostSchema,
 });
@@ -73,15 +62,13 @@ export async function createJobPostAction(prev: unknown, formData: FormData) {
     //     ? new Date(validated.data.appliedOn)
     //     : new Date(),
     // });
+    console.log("valid", validated);
 
     revalidatePath("/dashboard");
     return { success: true };
   } catch (error) {
     if (error instanceof ServerValidateError) {
       console.log("picket");
-      // console.log(error.formState.errorMap.onServer);
-      // console.log(error.formState.errors);
-      // console.log(error.formState.errors[0].issues);
       return error.formState;
     }
 

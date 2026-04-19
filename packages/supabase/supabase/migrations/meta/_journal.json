@@ -22,6 +22,20 @@
       "when": 1776508527210,
       "tag": "20260418103527_thick_abomination",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1776585909792,
+      "tag": "20260419080509_giant_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1776586887225,
+      "tag": "20260419082127_bored_banshee",
+      "breakpoints": true
     }
   ]
 }

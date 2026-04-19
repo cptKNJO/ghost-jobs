@@ -20,7 +20,8 @@ export const sources = pgTable("sources", {
 
 export const statuses = pgTable("statuses", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 20 }).notNull().unique(),
+  code: varchar({ length: 20 }).notNull().unique(),
+  name: varchar({ length: 20 }).notNull(),
   ...timestamps,
 });
 
@@ -82,9 +83,7 @@ export const jobPost = pgTable("job_post", {
   // Dates
   appliedOn: timestamp("applied_on", {
     withTimezone: true,
-  })
-    .defaultNow()
-    .notNull(),
+  }).defaultNow(),
   repliedOn: timestamp("replied_on", {
     withTimezone: true,
   }),

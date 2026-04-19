@@ -8,15 +8,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@repo/ui/components/card";
-import { Button } from "@repo/ui/components/button";
-import { Input } from "@repo/ui/components/input";
+} from "@repo/ui/components/ui/card";
+import { Button } from "@repo/ui/components/ui/button";
+import { Input } from "@repo/ui/components/ui/input";
 import {
   Field,
   FieldLabel,
   FieldError,
   FieldDescription,
-} from "@repo/ui/components/field";
+} from "@repo/ui/components/ui/field";
 import { signInWithMagicLink } from "./actions";
 
 export default function LoginForm() {

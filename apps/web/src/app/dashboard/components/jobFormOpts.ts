@@ -7,5 +7,7 @@ export const jobFormOpts = formOptions({
     companyId: "",
     statusId: "",
     sourceId: "",
+    appliedOn: new Date(),
+    repliedOn: null,
   },
 });

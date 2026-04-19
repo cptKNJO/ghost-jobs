@@ -13,6 +13,7 @@
     "@repo/ui": "workspace:*",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.102.1",
+    "@tanstack/react-form-nextjs": "^1.29.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
     "postcss": "^8.5.8",

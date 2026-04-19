@@ -8,6 +8,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 import { timestamps } from "./schema-helpers";
 
 export const sources = pgTable("sources", {
@@ -111,3 +112,6 @@ export const jobPostRelations = relations(jobPost, ({ one }) => ({
     references: [profiles.id],
   }),
 }));
+
+// Schemas for validators
+export const insertJobPostSchema = createInsertSchema(jobPost);

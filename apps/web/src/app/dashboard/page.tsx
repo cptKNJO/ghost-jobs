@@ -29,7 +29,7 @@ export default async function Dashboard() {
             search.
           </p>
         </div>
-        <AddJobPostDialog lookupData={lookupData} />
+        <AddJobPostDialog />
       </div>
 
       {jobPosts.length === 0 ? (
@@ -41,7 +41,7 @@ export default async function Dashboard() {
           <p className="mt-2 mb-6 text-sm text-muted-foreground max-w-xs">
             Start tracking your job search by adding your first application.
           </p>
-          <AddJobPostDialog lookupData={lookupData} />
+          <AddJobPostDialog />
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

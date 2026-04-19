@@ -1,24 +1,23 @@
 "use server";
 
+// FIXME: Shouldn't be importing anything with db here...
 import { revalidatePath } from "next/cache";
 import { db } from "@repo/db";
-import { jobPost, insertJobPostSchema } from "@repo/db/schema";
-import { getJobPosts, getLookupData } from "@/app/data/job-posts";
+import { jobPost } from "@repo/db/schema";
+import {
+  createJobPost,
+  getJobPosts,
+  getLookupData,
+} from "@/app/data/job-posts";
 import { getProfile } from "@/app/data/profile";
 import {
   createServerValidate,
   formOptions,
   ServerValidateError,
 } from "@tanstack/react-form-nextjs";
-import { z } from "zod";
+import { jobPostSchema } from "./utils/schema";
+// Custom error
 import "../lib/zod";
-
-const jobPostSchema = insertJobPostSchema.extend({
-  role: z.string().min(3, "Enter a role or job title"),
-  linkToPost: z.url("Enter a link to the job post"),
-  companyId: z.string().min(1, "Select a company"),
-  statusId: z.string().min(1, "Select a status"),
-});
 
 const serverValidate = createServerValidate({
   // TODO: Isn't this supposed to be jobPostOptions?
@@ -35,40 +34,20 @@ export async function getLookupDataAction() {
 }
 
 export async function createJobPostAction(prev: unknown, formData: FormData) {
-  console.log(formData);
   try {
     const validated = await serverValidate(formData);
-    // console.log("validatedData", validated);
 
     const profile = await getProfile();
     if (!profile) {
       return { error: "Profile not found" };
     }
 
-    // const rawData = {
-    //   role: formData.get("role"),
-    //   linkToPost: formData.get("linkToPost"),
-    //   companyId: formData.get("companyId"),
-    //   sourceId: formData.get("sourceId"),
-    //   statusId: formData.get("statusId"),
-    //   appliedOn: formData.get("appliedOn") || undefined,
-    // };
-
-    // try {
-    // await db.insert(jobPost).values({
-    //   ...validated.data,
-    //   profileId: profile.id,
-    //   appliedOn: validated.data.appliedOn
-    //     ? new Date(validated.data.appliedOn)
-    //     : new Date(),
-    // });
-    console.log("valid", validated);
+    await createJobPost(validated);
 
     revalidatePath("/dashboard");
     return { success: true };
   } catch (error) {
     if (error instanceof ServerValidateError) {
-      console.log("picket");
       return error.formState;
     }
 
@@ -77,6 +56,7 @@ export async function createJobPostAction(prev: unknown, formData: FormData) {
   }
 }
 
+// FIXME: no db imports directly here
 export async function deleteJobPostAction(id: number) {
   const profile = await getProfile();
   if (!profile) return { error: "Unauthorized" };

@@ -2,8 +2,8 @@ import { getUser } from "@/app/lib/dal/auth";
 import { redirect } from "next/navigation";
 import { getProfileAction } from "./profile/actions";
 import { getJobPostsAction, getLookupDataAction } from "./actions";
-import { JobPostCard } from "./components/JobPostCard";
-import { AddJobPostDialog } from "./components/AddJobPostDialog";
+import { JobPostCard } from "./components/job-post-card";
+import { AddJobPostDialog } from "./components/add-job-post-dialog";
 import { Briefcase } from "lucide-react";
 
 export default async function Dashboard() {
@@ -29,7 +29,7 @@ export default async function Dashboard() {
             search.
           </p>
         </div>
-        <AddJobPostDialog />
+        <AddJobPostDialog lookupData={lookupData} />
       </div>
 
       {jobPosts.length === 0 ? (
@@ -41,7 +41,7 @@ export default async function Dashboard() {
           <p className="mt-2 mb-6 text-sm text-muted-foreground max-w-xs">
             Start tracking your job search by adding your first application.
           </p>
-          <AddJobPostDialog />
+          <AddJobPostDialog lookupData={lookupData} />
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

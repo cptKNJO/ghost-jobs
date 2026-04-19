@@ -1,0 +1,1 @@
+ALTER TABLE "job_post" ALTER COLUMN "link_to_post" DROP NOT NULL;

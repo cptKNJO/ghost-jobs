@@ -33,7 +33,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/ui/field";
-import { jobFormOpts } from "./jobFormOpts";
+import { jobFormOpts } from "../utils/jobFormOpts";
 import {
   Select,
   SelectContent,
@@ -43,11 +43,13 @@ import {
 } from "@repo/ui/components/ui/select";
 import { DatePickerInput } from "@repo/ui/components/date-picker-input";
 
+import { type Status, type Company, type Source } from "@/app/data/job-posts";
+
 interface AddJobPostDialogProps {
   lookupData: {
-    statuses: any[];
-    companies: any[];
-    sources: any[];
+    statuses: Pick<Status, "id" | "name">[];
+    companies: Company[];
+    sources: Source[];
   };
 }
 const companies = [
@@ -55,6 +57,13 @@ const companies = [
   // { label: "Meta", value: "2" },
   // { label: "Amazon", value: "3" },
 ];
+
+function formatLookupData(lookupData: AddJobPostDialogProps["lookupData"]) {
+  return {
+    ...lookupData,
+    statuses: lookupData.statuses.map((s) => ({ label: s.name, value: s.id })),
+  };
+}
 
 export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
   const [open, setOpen] = useState(true);
@@ -65,6 +74,10 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
     ...jobFormOpts,
     transform: useTransform((baseForm) => mergeForm(baseForm, state!), [state]),
   });
+  // const formErrors = useStore(form.store, (formState) => formState.errors);
+  // console.log(formErrors);
+
+  const formattedLookupData = formatLookupData(lookupData);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -105,6 +118,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                     <Input
                       id={field.name}
                       name={field.name}
+                      defaultValue={field.state.value}
                       aria-invalid={isInvalid}
                       placeholder="Software Engineer"
                       autoComplete="off"
@@ -133,7 +147,6 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                         name={field.name}
                         aria-invalid={isInvalid}
                         placeholder="https://linkedin.com/jobs/..."
-                        required
                         className="mbs-auto"
                       />
                     </Field>
@@ -186,7 +199,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
                       )}
-                      <Combobox items={companies} open>
+                      <Combobox items={companies}>
                         <ComboboxInput
                           id={field.name}
                           name={field.name}
@@ -218,7 +231,13 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
                       )}
-                      <Select name={field.name}>
+                      <Select
+                        name={field.name}
+                        defaultValue={formattedLookupData?.statuses.find(
+                          (s) => s.label === "Applied",
+                        )}
+                        items={formattedLookupData?.statuses}
+                      >
                         <SelectTrigger
                           aria-invalid={isInvalid}
                           className="mbs-auto"
@@ -226,8 +245,11 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="auto">Auto</SelectItem>
-                          <SelectItem value="en">English</SelectItem>
+                          {formattedLookupData?.statuses.map((s) => (
+                            <SelectItem key={s.value} value={s.value}>
+                              {s.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </Field>

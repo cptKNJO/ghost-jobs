@@ -1,8 +1,50 @@
 import "server-only";
 
 import { db, eq } from "@repo/db";
-import { jobPost, companies, statuses, sources } from "@repo/db/schema";
+import { jobPost } from "@repo/db/schema";
 import { getProfile } from "./profile";
+import { type JobPost } from "../dashboard/utils/schema";
+export { type Status, type Company, type Source } from "@repo/db/schema";
+
+/**
+ * Recursively converts all empty strings in an object to null
+ */
+function emptyToNull<T extends object>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => [
+      key,
+      value === "" ? null : value,
+    ]),
+  ) as T;
+}
+
+function formatDateStringForDB(text: string) {
+  const date = new Date(text);
+
+  return date;
+  // return date.toISOString()
+}
+
+export async function createJobPost(post: JobPost) {
+  const profile = await getProfile();
+  if (!profile) return [];
+
+  const formattedPost = {
+    ...emptyToNull(post),
+    appliedOn: post.appliedOn ? formatDateStringForDB(post.appliedOn) : null,
+    repliedOn: post.repliedOn ? formatDateStringForDB(post.repliedOn) : null,
+    profileId: profile.id,
+  };
+
+  try {
+    const insertedJobPost = await db.insert(jobPost).values([formattedPost]);
+
+    return insertedJobPost;
+  } catch (error) {
+    console.error("Error creating job post:", error);
+    return [];
+  }
+}
 
 export async function getJobPosts() {
   const profile = await getProfile();
@@ -51,7 +93,7 @@ export async function getJobPostById(id: number) {
 export async function getLookupData() {
   try {
     const [allStatuses, allCompanies, allSources] = await Promise.all([
-      db.query.statuses.findMany(),
+      db.query.statuses.findMany({ columns: { id: true, name: true } }),
       db.query.companies.findMany(),
       db.query.sources.findMany(),
     ]);

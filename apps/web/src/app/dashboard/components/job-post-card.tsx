@@ -15,11 +15,11 @@ interface JobPostCardProps {
 }
 
 export function JobPostCard({ post }: JobPostCardProps) {
-  const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this application?")) {
-      await deleteJobPostAction(post.id);
-    }
-  };
+  // const handleDelete = async () => {
+  //   if (confirm("Are you sure you want to delete this application?")) {
+  //     await deleteJobPostAction(post.id);
+  //   }
+  // };
 
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md">
@@ -58,16 +58,16 @@ export function JobPostCard({ post }: JobPostCardProps) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between pt-0">
-        <Button variant="ghost" size="sm" asChild>
+        {/*<Button variant="ghost" size="sm" asChild>
           <a href={post.linkToPost} target="_blank" rel="noopener noreferrer">
             View Post <ExternalLink className="ml-2 size-3" />
           </a>
-        </Button>
+        </Button>*/}
         <Button
           variant="ghost"
           size="icon-sm"
           className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-          onClick={handleDelete}
+          // onClick={handleDelete}
         >
           <Trash2 className="size-4" />
         </Button>

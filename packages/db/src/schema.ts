@@ -9,6 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 import { timestamps } from "./schema-helpers";
 
 export const sources = pgTable("sources", {
@@ -90,7 +91,7 @@ export const jobPost = pgTable("job_post", {
 
   // Other fields
   role: text("role").notNull(),
-  linkToPost: text("link_to_post").notNull(),
+  linkToPost: text("link_to_post"),
 });
 
 export const jobPostRelations = relations(jobPost, ({ one }) => ({
@@ -114,3 +115,7 @@ export const jobPostRelations = relations(jobPost, ({ one }) => ({
 
 // Schemas for validators
 export const insertJobPostSchema = createInsertSchema(jobPost);
+// Types
+export type Status = InferSelectModel<typeof statuses>;
+export type Company = InferSelectModel<typeof companies>;
+export type Source = InferSelectModel<typeof sources>;

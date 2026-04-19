@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@source "../components/ui/**/*.{js,ts,jsx,tsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -54,8 +56,8 @@
   --card-foreground: oklch(0.145 0.008 326);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0.008 326);
-  --primary: oklch(0.741 0.238 128.85);
-  --primary-foreground: oklch(0.141 0.238 128.85);
+  --primary: oklch(0.841 0.2 128.85);
+  --primary-foreground: oklch(0.305 0.101 131.063);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.96 0.003 325.6);

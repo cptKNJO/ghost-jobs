@@ -24,7 +24,6 @@ interface DatePickerProps {
 }
 
 function formatDate(date: Date | undefined) {
-  console.log(date);
   if (!date) return "";
 
   return date.toLocaleDateString("en-US", {

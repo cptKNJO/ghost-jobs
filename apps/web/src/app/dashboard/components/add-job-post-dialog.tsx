@@ -66,7 +66,7 @@ function formatLookupData(lookupData: AddJobPostDialogProps["lookupData"]) {
 }
 
 export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const isLoading = false;
 
   const [state, action] = useActionState(createJobPostAction, initialFormState);
@@ -80,7 +80,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
   const formattedLookupData = formatLookupData(lookupData);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={state?.success ? false : open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
           <Button className="h-9 px-4">

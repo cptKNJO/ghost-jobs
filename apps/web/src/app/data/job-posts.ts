@@ -4,19 +4,8 @@ import { db, eq } from "@repo/db";
 import { jobPost } from "@repo/db/schema";
 import { getProfile } from "./profile";
 import { type JobPost } from "../dashboard/utils/schema";
+import { cleanFormEntries } from "../utils/clean-form-entries";
 export { type Status, type Company, type Source } from "@repo/db/schema";
-
-/**
- * Recursively converts all empty strings in an object to null
- */
-function emptyToNull<T extends object>(obj: T): T {
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      value === "" ? null : value,
-    ]),
-  ) as T;
-}
 
 function formatDateStringForDB(text: string) {
   const date = new Date(text);
@@ -30,7 +19,7 @@ export async function createJobPost(post: JobPost) {
   if (!profile) return [];
 
   const formattedPost = {
-    ...emptyToNull(post),
+    ...cleanFormEntries(post),
     appliedOn: post.appliedOn ? formatDateStringForDB(post.appliedOn) : null,
     repliedOn: post.repliedOn ? formatDateStringForDB(post.repliedOn) : null,
     profileId: profile.id,

@@ -41,3 +41,7 @@ To ensure Drizzle migrations are in sync with your local Supabase PostgreSQL, fo
         ```
     *   **Supabase Studio:**
         Navigate to your local Supabase Studio (usually `http://localhost:54323` if default) in your browser to visually confirm the schema changes.
+6. Push seeds to production
+```sh
+supabase db push --include-seed
+```

@@ -2,9 +2,9 @@ import { redirect } from "next/navigation";
 import { Briefcase } from "lucide-react";
 import { getUser } from "@/app/lib/dal/auth";
 import { getProfileAction } from "./profile/actions";
-import { getJobPostsAction, getLookupDataAction } from "./job-post/actions";
-import { JobPostsTable } from "./job-post/components/job-posts-table";
-import { AddJobPostDialog } from "./job-post/components/add-job-post-dialog";
+import { getJobPostsAction, getLookupDataAction } from "./jobs/actions";
+import { JobPostsTable } from "./jobs/components/job-posts-table";
+import { AddJobPostDialog } from "./jobs/components/add-job-post-dialog";
 
 export default async function Dashboard() {
   const user = await getUser();

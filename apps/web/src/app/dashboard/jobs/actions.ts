@@ -7,7 +7,7 @@ import {
   getJobPosts,
   getLookupData,
   deleteJobPost,
-} from "@/app/dashboard/job-post/data/job-posts";
+} from "./data/job-posts";
 import {
   createServerValidate,
   formOptions,

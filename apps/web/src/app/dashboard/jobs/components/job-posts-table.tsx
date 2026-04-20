@@ -64,7 +64,7 @@ function ActionCell({ post, onActionComplete }: ActionCellProps) {
       <Link
         variant="ghost"
         size="icon-sm"
-        href={`/dashboard/job-post/${post.id}`}
+        href={`/dashboard/jobs/${post.id}`}
         title="View Details"
       >
         <Eye className="size-4" />
@@ -136,7 +136,7 @@ export function JobPostsTable({ data }: JobPostsTableProps) {
       header: "Role",
       cell: ({ row }) => {
         return (
-          <Link href={`/dashboard/job-post/${row.original.id}`}>
+          <Link href={`/dashboard/jobs/${row.original.id}`}>
             {row.getValue("role")}
           </Link>
         );

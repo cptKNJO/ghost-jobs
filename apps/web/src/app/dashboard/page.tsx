@@ -2,7 +2,7 @@ import { getUser } from "@/app/lib/dal/auth";
 import { redirect } from "next/navigation";
 import { getProfileAction } from "./profile/actions";
 import { getJobPostsAction, getLookupDataAction } from "./actions";
-import { JobPostCard } from "./components/job-post-card";
+import { JobPostsTable } from "./components/job-posts-table";
 import { AddJobPostDialog } from "./components/add-job-post-dialog";
 import { Briefcase } from "lucide-react";
 
@@ -44,11 +44,7 @@ export default async function Dashboard() {
           <AddJobPostDialog lookupData={lookupData} />
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {jobPosts.map((post) => (
-            <JobPostCard key={post.id} post={post} />
-          ))}
-        </div>
+        <JobPostsTable data={jobPosts} />
       )}
     </div>
   );

@@ -113,10 +113,16 @@ export async function deleteJobPostAction(id: number) {
     revalidatePath("/dashboard");
     return {
       success: true,
-      message: "Successfully deleted!",
+      message: {
+        title: "Deleted!",
+        text: "The job application has been removed.",
+      },
     };
   } catch (error) {
     console.error("Failed to delete job post:", error);
-    return { error: "Database error" };
+    return {
+      error: true,
+      message: "Failed to delete the application, please try again.",
+    };
   }
 }

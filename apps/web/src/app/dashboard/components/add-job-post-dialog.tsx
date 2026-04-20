@@ -38,7 +38,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/ui/field";
-import { jobFormOpts } from "../utils/jobFormOpts";
+import { jobFormOpts } from "../utils/job-form-opts";
 import {
   Select,
   SelectContent,

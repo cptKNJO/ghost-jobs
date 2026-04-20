@@ -11,3 +11,9 @@ export const jobFormOpts = formOptions({
     repliedOn: null,
   },
 });
+
+export const companyFormOpts = formOptions({
+  defaultValues: {
+    name: "",
+  },
+});

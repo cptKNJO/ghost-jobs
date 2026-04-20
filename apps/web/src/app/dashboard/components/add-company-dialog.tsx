@@ -27,6 +27,7 @@ import {
 } from "@repo/ui/components/ui/field";
 import { companyFormOpts } from "../utils/companyFormOpts";
 import { FormAlerts } from "@/components/shared/form-alert";
+import { companyFormOpts } from "../utils/job-form-opts";
 
 export function AddCompanyDialog() {
   const [open, setOpen] = useState(false);

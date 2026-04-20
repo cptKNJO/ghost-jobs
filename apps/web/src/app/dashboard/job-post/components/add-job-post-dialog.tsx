@@ -185,7 +185,10 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
                       )}
-                      <Combobox items={formattedLookupData.companies}>
+                      <Combobox
+                        items={formattedLookupData.companies}
+                        itemToStringValue={(item) => item.label}
+                      >
                         <ComboboxInput
                           id={field.name}
                           name={field.name}
@@ -195,9 +198,6 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                         <ComboboxContent>
                           <ComboboxEmpty className="p-0">
                             <div className="flex flex-col items-center justify-center py-4 px-4 text-center">
-                              <p className="text-sm text-muted-foreground">
-                                No item found.
-                              </p>
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -205,13 +205,13 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                                 onClick={() => setCompanyDialogOpen(true)}
                               >
                                 <Plus className="h-4 w-4" />
-                                Create New Company
+                                Add company
                               </Button>
                             </div>
                           </ComboboxEmpty>
                           <ComboboxList>
                             {(item) => (
-                              <ComboboxItem key={item.value} value={item.value}>
+                              <ComboboxItem key={item.value} value={item}>
                                 {item.label}
                               </ComboboxItem>
                             )}

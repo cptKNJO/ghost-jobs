@@ -5,7 +5,6 @@ import { getProfileAction } from "./profile/actions";
 import { getJobPostsAction, getLookupDataAction } from "./job-post/actions";
 import { JobPostsTable } from "./job-post/components/job-posts-table";
 import { AddJobPostDialog } from "./job-post/components/add-job-post-dialog";
-import { AddCompanyDialog } from "./job-post/components/add-company-dialog";
 
 export default async function Dashboard() {
   const user = await getUser();
@@ -31,7 +30,6 @@ export default async function Dashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <AddCompanyDialog />
           <AddJobPostDialog lookupData={lookupData} />
         </div>
       </div>
@@ -46,7 +44,6 @@ export default async function Dashboard() {
             Start tracking your job search by adding your first application.
           </p>
           <div className="flex gap-2">
-            <AddCompanyDialog />
             <AddJobPostDialog lookupData={lookupData} />
           </div>
         </div>

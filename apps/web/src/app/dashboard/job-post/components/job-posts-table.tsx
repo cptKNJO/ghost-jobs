@@ -74,7 +74,7 @@ function ActionCell({ post, onActionComplete }: ActionCellProps) {
             <Button
               variant="ghost"
               size="icon-sm"
-              className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+              className="hover:bg-destructive/10 hover:text-destructive"
               title="Delete"
             />
           }

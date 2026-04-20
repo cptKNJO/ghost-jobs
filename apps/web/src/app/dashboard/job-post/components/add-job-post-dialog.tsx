@@ -138,7 +138,8 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                     <Input
                       id={field.name}
                       name={field.name}
-                      defaultValue={field.state.value}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder="Software Engineer"
                       autoComplete="off"
@@ -187,7 +188,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                       )}
                       <Combobox
                         items={formattedLookupData.companies}
-                        itemToStringValue={(item) => item.label}
+                        itemToStringValue={(item) => item.value}
                       >
                         <ComboboxInput
                           id={field.name}

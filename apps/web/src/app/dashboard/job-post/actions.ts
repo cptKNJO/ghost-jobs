@@ -39,6 +39,11 @@ export async function createCompanyAction(
   prev: unknown,
   formData: FormData | null,
 ) {
+  if (formData === null) {
+    revalidatePath("/dashboard");
+    return { success: null, error: null };
+  }
+
   try {
     // TODO: why isn't this revalidating and closing the form?
     const validated = await serverValidateCompany(formData);
@@ -54,6 +59,7 @@ export async function createCompanyAction(
       },
     };
   } catch (error) {
+    console.log("sad", error);
     if (error instanceof ServerValidateError) {
       return error.formState;
     }

@@ -86,7 +86,7 @@ export function AddCompanyDialog({
           className="space-y-6 pb-4"
         >
           <FieldGroup>
-            <FormAlerts state={state} />
+            <FormAlerts state={state} onClear={handleReset} />
             <form.Field
               name="name"
               children={(field) => {

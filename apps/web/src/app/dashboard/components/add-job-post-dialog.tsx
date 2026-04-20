@@ -14,6 +14,7 @@ import { Input } from "@repo/ui/components/ui/input";
 import {
   Combobox,
   ComboboxContent,
+  ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
@@ -29,7 +30,6 @@ import {
   initialFormState,
   mergeForm,
   useForm,
-  useStore,
   useTransform,
 } from "@tanstack/react-form-nextjs";
 import {
@@ -49,6 +49,7 @@ import {
 import { DatePickerInput } from "@repo/ui/components/date-picker-input";
 
 import { type Status, type Company, type Source } from "@/app/data/job-posts";
+import { FormAlerts } from "@/components/shared/form-alert";
 
 interface AddJobPostDialogProps {
   lookupData: {
@@ -71,7 +72,7 @@ function formatLookupData(lookupData: AddJobPostDialogProps["lookupData"]) {
 }
 
 export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const isLoading = false;
 
   const [state, action] = useActionState(createJobPostAction, initialFormState);
@@ -79,8 +80,6 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
     ...jobFormOpts,
     transform: useTransform((baseForm) => mergeForm(baseForm, state!), [state]),
   });
-  const formErrors = useStore(form.store, (formState) => formState.errors);
-  console.log(formErrors);
 
   const formattedLookupData = formatLookupData(lookupData);
 
@@ -119,19 +118,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
           className="space-y-6 pb-4"
         >
           <FieldGroup>
-            {state?.error && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{state?.message}</AlertDescription>
-              </Alert>
-            )}
-            {state?.success && (
-              <Alert variant="success">
-                <CheckCircle2Icon className="h-4 w-4" />
-                <AlertTitle>{state?.message.title}</AlertTitle>
-                <AlertDescription>{state?.message.text}</AlertDescription>
-              </Alert>
-            )}
+            <FormAlerts state={state} />
             {/*{formErrors.map((error, i) => (
               <p key={i}>Error: {error}</p>
             ))}*/}
@@ -198,7 +185,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
                       )}
-                      <Combobox items={companies} open>
+                      <Combobox items={companies}>
                         <ComboboxInput
                           id={field.name}
                           name={field.name}
@@ -206,6 +193,21 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                           className="mbs-auto"
                         />
                         <ComboboxContent>
+                          <ComboboxEmpty className="p-0">
+                            <div className="flex flex-col items-center justify-center py-4 px-4 text-center">
+                              <p className="text-sm text-muted-foreground">
+                                No item found.
+                              </p>
+                              {/*<Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => router.push("/forms/new-item")} // Or open a Dialog
+                              >
+                                <Plus className="h-4 w-4" />
+                                Create New Item
+                              </Button>*/}
+                            </div>
+                          </ComboboxEmpty>
                           <ComboboxList>
                             {(item) => (
                               <ComboboxItem key={item.label} value={item}>

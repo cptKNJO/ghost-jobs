@@ -2,14 +2,14 @@ import "server-only";
 
 import { db, eq } from "@repo/db";
 import { companies, jobPost } from "@repo/db/schema";
-import { getProfile } from "./profile";
+export { type Status, type Company, type Source } from "@repo/db/schema";
+import { getProfile } from "../../profile/data/profile";
 import {
   companySchema,
   jobPostSchema,
   type CompanySchema,
   type JobPost,
-} from "../dashboard/utils/schema";
-export { type Status, type Company, type Source } from "@repo/db/schema";
+} from "../utils/schema";
 
 function formatDateStringForDB(text: string) {
   const date = new Date(text);

@@ -9,8 +9,8 @@ import {
   createCompany,
   getJobPosts,
   getLookupData,
-} from "@/app/data/job-posts";
-import { getProfile } from "@/app/data/profile";
+} from "@/app/dashboard/job-post/data/job-posts";
+import { getProfile } from "@/app/dashboard/profile/data/profile";
 import {
   createServerValidate,
   formOptions,
@@ -18,7 +18,7 @@ import {
 } from "@tanstack/react-form-nextjs";
 import { companySchema, jobPostSchema } from "./utils/schema";
 // Custom error
-import "../lib/zod";
+import "../../lib/zod";
 
 const serverValidateJobPost = createServerValidate({
   ...formOptions,
@@ -43,6 +43,7 @@ export async function createCompanyAction(
   formData: FormData | null,
 ) {
   try {
+    // TODO: why isn't this revalidating and closing the form?
     const validated = await serverValidateCompany(formData);
 
     await createCompany(validated);

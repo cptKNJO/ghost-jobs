@@ -1,6 +1,6 @@
 "use server";
 
-import { getProfile } from "@/app/data/profile";
+import { getProfile } from "./data/profile";
 
 export async function getProfileAction() {
   return await getProfile();

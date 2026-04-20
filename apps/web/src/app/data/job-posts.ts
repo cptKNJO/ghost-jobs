@@ -31,6 +31,7 @@ export async function createJobPost(post: JobPost) {
 
     return insertedJobPost;
   } catch (error) {
+    // TODO: This needs to throw
     console.error("Error creating job post:", error);
     return [];
   }

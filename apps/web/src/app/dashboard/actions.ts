@@ -19,36 +19,6 @@ import { jobPostSchema } from "./utils/schema";
 // Custom error
 import "../lib/zod";
 
-function cleanFormData(formData: FormData) {
-  const rawData = Object.fromEntries(formData);
-
-  // 1. Clean the data
-  const cleanData = Object.fromEntries(
-    Object.entries(rawData).map(([key, value]) => {
-      if (typeof value !== "string") return [key, value];
-
-      const trimmed = value.trim();
-      // Convert empty strings to null for the DB
-      return [key, trimmed === "" ? null : trimmed];
-    }),
-  );
-
-  const cleanFormData = new FormData();
-
-  Object.entries(cleanData).forEach(([key, value]) => {
-    // FormData doesn't support null/undefined natively.
-    // We check if the value exists before appending.
-    if (value !== null && value !== undefined) {
-      cleanFormData.append(key, value as string | Blob);
-    } else {
-      // If you want to keep the key but have it empty:
-      cleanFormData.append(key, "");
-    }
-  });
-
-  return cleanFormData;
-}
-
 const serverValidate = createServerValidate({
   // TODO: Isn't this supposed to be jobPostOptions?
   ...formOptions,
@@ -66,12 +36,6 @@ export async function getLookupDataAction() {
 export async function createJobPostAction(prev: unknown, formData: FormData) {
   try {
     const validated = await serverValidate(formData);
-
-    // TODO: Remove this since we already check in dto
-    const profile = await getProfile();
-    if (!profile) {
-      return { error: "Profile not found" };
-    }
 
     await createJobPost(validated);
 

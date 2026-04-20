@@ -31,6 +31,3 @@ function getRelativeTime(date: Date) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
   return rtf.format(diffInDays, "day");
 }
-
-const lastThursday = new Date("2026-04-16");
-console.log(getRelativeTime(lastThursday)); // "4 days ago"

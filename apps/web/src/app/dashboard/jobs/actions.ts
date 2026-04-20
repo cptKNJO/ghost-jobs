@@ -7,6 +7,8 @@ import {
   getJobPosts,
   getLookupData,
   deleteJobPost,
+  editJobPost,
+  getJobPostById,
 } from "./data/job-posts";
 import {
   createServerValidate,
@@ -16,6 +18,7 @@ import {
 import { companySchema, jobPostSchema } from "./utils/schema";
 // Custom error
 import "../../lib/zod";
+import { idSchema } from "../../lib/zod";
 
 const serverValidateJobPost = createServerValidate({
   ...formOptions,
@@ -33,6 +36,17 @@ export async function getJobPostsAction() {
 
 export async function getLookupDataAction() {
   return await getLookupData();
+}
+
+export async function getJobPostByIdAction(id: string) {
+  const result = idSchema.safeParse(id);
+
+  if (!result.success) {
+    console.log(result.error!.issues);
+    return { error: result.error!.issues };
+  }
+
+  return await getJobPostById(result.data);
 }
 
 export async function createCompanyAction(
@@ -59,7 +73,6 @@ export async function createCompanyAction(
       },
     };
   } catch (error) {
-    console.log("sad", error);
     if (error instanceof ServerValidateError) {
       return error.formState;
     }
@@ -101,6 +114,43 @@ export async function createJobPostAction(
       },
     };
   } catch (error) {
+    if (error instanceof ServerValidateError) {
+      return error.formState;
+    }
+
+    return {
+      error: true,
+      message: "Failed to save the form, try again later.",
+    };
+  }
+}
+
+export async function editJobPostAction(
+  id: number,
+  prevState: any,
+  formData: FormData | null,
+) {
+  // Handle reset
+  if (formData === null) {
+    revalidatePath(`/jobs/${id}`);
+    return { success: null, error: null };
+  }
+
+  try {
+    const validated = await serverValidateJobPost(formData);
+
+    await editJobPost(id, validated);
+
+    // TODO: This should appear on top of the edit page
+    return {
+      success: true,
+      message: {
+        title: "Successfully updated!",
+        text: "Add another job post or close the form.",
+      },
+    };
+  } catch (error) {
+    console.log(error);
     if (error instanceof ServerValidateError) {
       return error.formState;
     }

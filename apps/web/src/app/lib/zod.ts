@@ -52,3 +52,5 @@ export const requiredTextSchema = (error = "Enter the required information") =>
     .string()
     .transform((s) => s.trim())
     .refine((s) => s.length > 0, { error });
+
+export const idSchema = z.coerce.number().int().positive();

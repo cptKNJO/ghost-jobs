@@ -4,6 +4,7 @@ import { db, eq } from "@repo/db";
 import { profiles } from "@repo/db/schema";
 import { getUser } from "@/app/lib/dal/auth";
 
+// TODO: This should probably lead to the login page
 export async function getProfile() {
   const user = await getUser();
   if (!user) return null;

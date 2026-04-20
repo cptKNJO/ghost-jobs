@@ -18,7 +18,8 @@ import {
 import { Link } from "@repo/ui/components/ui/link";
 import DateComponent from "../components/date-component";
 import { AddJobPostDialog } from "../components/add-job-post-dialog";
-import { getLookupDataAction } from "../actions";
+import { getJobPostByIdAction, getLookupDataAction } from "../actions";
+import { EditJobPostDialog } from "../components/edit-job-post-dialog";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -32,7 +33,10 @@ export default async function JobPostPage({ params }: PageProps) {
     notFound();
   }
 
-  const [lookupData] = await Promise.all([getLookupDataAction()]);
+  const [jobPost, lookupData] = await Promise.all([
+    getJobPostByIdAction(id),
+    getLookupDataAction(),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -46,7 +50,7 @@ export default async function JobPostPage({ params }: PageProps) {
           </h1>
         </div>
         <div className="flex gap-2">
-          <AddJobPostDialog lookupData={lookupData} />
+          <EditJobPostDialog lookupData={lookupData} jobPost={jobPost} />
         </div>
       </div>
 

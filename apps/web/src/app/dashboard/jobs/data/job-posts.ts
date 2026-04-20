@@ -17,6 +17,20 @@ function formatDateStringForDB(text: string) {
   return date;
 }
 
+function cleanPost(post: JobPost, profileId: number) {
+  // We need to parse again to actually get the (cleaned) output since Tanstack Form doesn't let you get it for server function above
+  const cleaned = jobPostSchema.parse(post);
+
+  const formattedPost = {
+    ...cleaned,
+    appliedOn: post.appliedOn ? formatDateStringForDB(post.appliedOn) : null,
+    repliedOn: post.repliedOn ? formatDateStringForDB(post.repliedOn) : null,
+    profileId: profileId,
+  };
+
+  return formattedPost;
+}
+
 export async function createCompany(data: CompanySchema) {
   const profile = await getProfile();
   if (!profile) return null;
@@ -32,24 +46,47 @@ export async function createCompany(data: CompanySchema) {
     throw Error("Failed to save the company", { cause: error.cause });
   }
 }
+
 export async function createJobPost(post: JobPost) {
   const profile = await getProfile();
   if (!profile) return [];
 
-  // We need to parse again to actually get the (cleaned) output since Tanstack Form doesn't let you get it for server function above
-  const cleaned = jobPostSchema.parse(post);
-
-  const formattedPost = {
-    ...cleaned,
-    appliedOn: post.appliedOn ? formatDateStringForDB(post.appliedOn) : null,
-    repliedOn: post.repliedOn ? formatDateStringForDB(post.repliedOn) : null,
-    profileId: profile.id,
-  };
+  const formattedPost = cleanPost(post, profile.id);
 
   try {
-    const insertedJobPost = await db.insert(jobPost).values([formattedPost]);
+    const insertedJobPost = await db.insert(jobPost).values(formattedPost);
 
     return insertedJobPost;
+  } catch (error) {
+    throw Error("Failed to save the data", { cause: error });
+  }
+}
+
+export async function editJobPost(id: number, post: JobPost) {
+  const profile = await getProfile();
+  if (!profile) return [];
+
+  const formattedPost = cleanPost(post, profile.id);
+
+  try {
+    const [updatedRow] = await db
+      .update(jobPost)
+      .set(formattedPost)
+      .where(
+        and(
+          eq(jobPost.id, id),
+          eq(jobPost.profileId, profile.id), // Authorization gate
+        ),
+      )
+      .returning({ id: jobPost.id });
+
+    // If updatedRow is undefined, the ID/Profile didn't match
+    if (!updatedRow) {
+      return {
+        success: false,
+        message: "Update failed: job not found or unauthorized.",
+      };
+    }
   } catch (error) {
     throw Error("Failed to save the data", { cause: error });
   }
@@ -98,6 +135,9 @@ export async function getJobPostById(id: number) {
     const post = await db.query.jobPost.findFirst({
       where: (jobPost, { and, eq }) =>
         and(eq(jobPost.id, id), eq(jobPost.profileId, profile.id)),
+      columns: {
+        profileId: false,
+      },
       with: {
         company: true,
         status: true,

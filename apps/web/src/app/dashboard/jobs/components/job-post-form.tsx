@@ -67,8 +67,8 @@ const companies = [];
 function formatLookupData(lookupData: AddJobPostDialogProps["lookupData"]) {
   return {
     ...lookupData,
-    statuses: lookupData.statuses.map((s) => ({ label: s.name, value: s.id })),
-    companies: lookupData.companies.map((d) => ({
+    statuses: lookupData?.statuses.map((s) => ({ label: s.name, value: s.id })),
+    companies: lookupData?.companies.map((d) => ({
       label: d.name,
       value: d.id,
     })),
@@ -170,6 +170,9 @@ export function JobPostForm({
                       name={field.name}
                       items={formattedLookupData.companies}
                       itemToStringValue={(item) => item.value}
+                      defaultValue={formattedLookupData?.companies.find(
+                        (c) => c.value === field.state.value,
+                      )}
                     >
                       <ComboboxInput
                         placeholder="Select a company"

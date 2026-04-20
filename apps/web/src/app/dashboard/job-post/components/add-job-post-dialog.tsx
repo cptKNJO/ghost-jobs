@@ -187,8 +187,8 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                         <FieldError errors={field.state.meta.errors} />
                       )}
                       <Combobox
-                      // items={formattedLookupData.companies}
-                      // itemToStringValue={(item) => item.value}
+                        items={formattedLookupData.companies}
+                        // itemToStringValue={(item) => item.value}
                       >
                         <ComboboxInput
                           id={field.name}
@@ -211,11 +211,11 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                             </div>
                           </ComboboxEmpty>
                           <ComboboxList>
-                            {formattedLookupData.companies.map((item) => (
+                            {(item) => (
                               <ComboboxItem key={item.label} value={item.value}>
                                 {item.label}
                               </ComboboxItem>
-                            ))}
+                            )}
                           </ComboboxList>
                         </ComboboxContent>
                       </Combobox>

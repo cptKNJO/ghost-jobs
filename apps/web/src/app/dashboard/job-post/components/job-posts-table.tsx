@@ -18,6 +18,7 @@ import {
 import { Trash2, ExternalLink } from "lucide-react";
 import { deleteJobPostAction } from "../actions";
 import { FormAlerts } from "@/components/shared/form-alert";
+import { Link } from "@repo/ui/components/ui/link";
 
 interface JobPost {
   id: number;
@@ -56,11 +57,15 @@ function ActionCell({ post, onActionComplete }: ActionCellProps) {
   return (
     <div className="flex items-center justify-end gap-2">
       {post.linkToPost && (
-        <Button variant="ghost" size="icon-sm" asChild title="View Post">
-          <a href={post.linkToPost} target="_blank" rel="noopener noreferrer">
-            <ExternalLink className="size-4" />
-          </a>
-        </Button>
+        <Link
+          variant="ghost"
+          size="icon-sm"
+          href={post.linkToPost}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <ExternalLink className="size-4" />
+        </Link>
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>

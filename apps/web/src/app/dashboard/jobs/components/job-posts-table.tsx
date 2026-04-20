@@ -147,7 +147,7 @@ export function JobPostsTable({ data }: JobPostsTableProps) {
       header: "Company",
       cell: ({ row }) => {
         const company = row.original.company;
-        return <div>{company?.name || "Unknown"}</div>;
+        return <div>{company?.name || "-"}</div>;
       },
     },
     {

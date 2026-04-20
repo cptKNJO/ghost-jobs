@@ -17,6 +17,8 @@ import {
 } from "@repo/ui/components/ui/card";
 import { Link } from "@repo/ui/components/ui/link";
 import DateComponent from "../components/date-component";
+import { AddJobPostDialog } from "../components/add-job-post-dialog";
+import { getLookupDataAction } from "../actions";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,15 +32,22 @@ export default async function JobPostPage({ params }: PageProps) {
     notFound();
   }
 
+  const [lookupData] = await Promise.all([getLookupDataAction()]);
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Link variant="ghost" href="/dashboard">
-          <ArrowLeft className="size-4" />
-        </Link>
-        <h1 className="text-2xl font-bold tracking-tight">
-          Application Details
-        </h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link variant="ghost" href="/dashboard">
+            <ArrowLeft className="size-4" />
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Application Details
+          </h1>
+        </div>
+        <div className="flex gap-2">
+          <AddJobPostDialog lookupData={lookupData} />
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">

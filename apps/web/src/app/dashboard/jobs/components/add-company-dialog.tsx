@@ -67,15 +67,6 @@ export function AddCompanyDialog({
         setOpen(v);
       }}
     >
-      {showTrigger && (
-        <DialogTrigger
-          render={
-            <Button variant="outline" className="h-9 px-4">
-              <Plus className="mr-2 size-4" /> New Company
-            </Button>
-          }
-        />
-      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Company</DialogTitle>
@@ -86,7 +77,7 @@ export function AddCompanyDialog({
           className="space-y-6 pb-4"
         >
           <FieldGroup>
-            <FormAlerts state={state} onClear={handleReset} />
+            <FormAlerts state={state} />
             <form.Field
               name="name"
               children={(field) => {

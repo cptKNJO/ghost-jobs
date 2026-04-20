@@ -180,7 +180,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                   const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
-                    <Field orientation="responsive" data-invalid={isInvalid}>
+                    <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>Company</FieldLabel>
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
@@ -230,7 +230,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                   const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
-                    <Field orientation="responsive" data-invalid={isInvalid}>
+                    <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>Source</FieldLabel>
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />
@@ -262,7 +262,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                   const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
-                    <Field orientation="responsive" data-invalid={isInvalid}>
+                    <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>Status</FieldLabel>
                       {isInvalid && (
                         <FieldError errors={field.state.meta.errors} />

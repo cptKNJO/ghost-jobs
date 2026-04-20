@@ -28,8 +28,23 @@ import {
 import { FormAlerts } from "@/components/shared/form-alert";
 import { companyFormOpts } from "../utils/job-form-opts";
 
-export function AddCompanyDialog() {
-  const [open, setOpen] = useState(false);
+interface AddCompanyDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showTrigger?: boolean;
+}
+
+export function AddCompanyDialog({
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+  showTrigger = true,
+}: AddCompanyDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen =
+    setControlledOpen !== undefined ? setControlledOpen : setInternalOpen;
+
   const isLoading = false;
 
   const [state, action] = useActionState(createCompanyAction, initialFormState);
@@ -38,15 +53,29 @@ export function AddCompanyDialog() {
     transform: useTransform((baseForm) => mergeForm(baseForm, state!), [state]),
   });
 
+  function handleReset() {
+    action(null);
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          <Button variant="outline" className="h-9 px-4">
-            <Plus className="mr-2 size-4" /> New Company
-          </Button>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) {
+          handleReset();
         }
-      />
+        setOpen(v);
+      }}
+    >
+      {showTrigger && (
+        <DialogTrigger
+          render={
+            <Button variant="outline" className="h-9 px-4">
+              <Plus className="mr-2 size-4" /> New Company
+            </Button>
+          }
+        />
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New Company</DialogTitle>

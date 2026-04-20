@@ -49,6 +49,7 @@ import {
   type Source,
 } from "@/app/dashboard/job-post/data/job-posts";
 import { FormAlerts } from "@/components/shared/form-alert";
+import { AddCompanyDialog } from "./add-company-dialog";
 
 interface AddJobPostDialogProps {
   lookupData: {
@@ -73,6 +74,7 @@ function formatLookupData(lookupData: AddJobPostDialogProps["lookupData"]) {
 
 export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
   const [open, setOpen] = useState(false);
+  const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const isLoading = false;
 
   const [state, action] = useActionState(createJobPostAction, initialFormState);
@@ -119,9 +121,6 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
         >
           <FieldGroup>
             <FormAlerts state={state} />
-            {/*{formErrors.map((error, i) => (
-              <p key={i}>Error: {error}</p>
-            ))}*/}
             <form.Field
               name="role"
               children={(field) => {
@@ -166,6 +165,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                       <Input
                         id={field.name}
                         name={field.name}
+                        defaultValue={field.state.value}
                         aria-invalid={isInvalid}
                         placeholder="https://linkedin.com/jobs/..."
                         className="mbs-auto"
@@ -198,14 +198,15 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                               <p className="text-sm text-muted-foreground">
                                 No item found.
                               </p>
-                              {/*<Button
+                              <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => router.push("/forms/new-item")} // Or open a Dialog
+                                type="button"
+                                onClick={() => setCompanyDialogOpen(true)}
                               >
                                 <Plus className="h-4 w-4" />
-                                Create New Item
-                              </Button>*/}
+                                Create New Company
+                              </Button>
                             </div>
                           </ComboboxEmpty>
                           <ComboboxList>
@@ -343,7 +344,6 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
           <DialogFooter>
             <Button
               type="submit"
-              // TODO: Find a better solution over disabling
               disabled={isLoading}
               className="w-full sm:w-auto"
             >
@@ -351,6 +351,11 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
             </Button>
           </DialogFooter>
         </form>
+        <AddCompanyDialog
+          open={companyDialogOpen}
+          onOpenChange={setCompanyDialogOpen}
+          showTrigger={false}
+        />
       </DialogContent>
     </Dialog>
   );

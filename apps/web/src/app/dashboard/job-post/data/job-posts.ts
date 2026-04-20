@@ -1,6 +1,6 @@
 import "server-only";
 
-import { db, eq } from "@repo/db";
+import { db, eq, and } from "@repo/db";
 import { companies, jobPost } from "@repo/db/schema";
 export { type Status, type Company, type Source } from "@repo/db/schema";
 import { getProfile } from "../../profile/data/profile";
@@ -52,6 +52,19 @@ export async function createJobPost(post: JobPost) {
     return insertedJobPost;
   } catch (error) {
     throw Error("Failed to save the data", { cause: error });
+  }
+}
+
+export async function deleteJobPost(id: number) {
+  const profile = await getProfile();
+  if (!profile) return null;
+
+  try {
+    await db
+      .delete(jobPost)
+      .where(and(eq(jobPost.id, id), eq(jobPost.profileId, profile.id)));
+  } catch (error) {
+    throw Error("Failed to delete the job post", { cause: error });
   }
 }
 

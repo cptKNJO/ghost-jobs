@@ -1,16 +1,13 @@
 "use server";
 
-// FIXME: Shouldn't be importing anything with db here...
 import { revalidatePath } from "next/cache";
-import { db } from "@repo/db";
-import { jobPost } from "@repo/db/schema";
 import {
   createJobPost,
   createCompany,
   getJobPosts,
   getLookupData,
+  deleteJobPost,
 } from "@/app/dashboard/job-post/data/job-posts";
-import { getProfile } from "@/app/dashboard/profile/data/profile";
 import {
   createServerValidate,
   formOptions,
@@ -109,23 +106,15 @@ export async function createJobPostAction(
   }
 }
 
-// FIXME: no db imports directly here
 export async function deleteJobPostAction(id: number) {
-  const profile = await getProfile();
-  if (!profile) return { error: "Unauthorized" };
-
   try {
-    // Drizzle doesn't easily support multi-condition delete in the simple syntax,
-    // we use standard eq(jobPost.id, id) but we should ideally verify ownership.
-    // Given profileId is on the table, we can use and() from drizzle-orm.
-    const { eq, and } = await import("@repo/db");
-
-    await db
-      .delete(jobPost)
-      .where(and(eq(jobPost.id, id), eq(jobPost.profileId, profile.id)));
+    await deleteJobPost(id);
 
     revalidatePath("/dashboard");
-    return { success: true };
+    return {
+      success: true,
+      message: "Successfully deleted!",
+    };
   } catch (error) {
     console.error("Failed to delete job post:", error);
     return { error: "Database error" };

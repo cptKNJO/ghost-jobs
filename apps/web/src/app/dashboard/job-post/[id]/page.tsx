@@ -7,7 +7,6 @@ import {
   Info,
 } from "lucide-react";
 import { getJobPostById } from "../data/job-posts";
-import { formatDate } from "../utils/date";
 import { Button } from "@repo/ui/components/ui/button";
 import { Badge } from "@repo/ui/components/ui/badge";
 import {
@@ -17,6 +16,7 @@ import {
   CardTitle,
 } from "@repo/ui/components/ui/card";
 import { Link } from "@repo/ui/components/ui/link";
+import DateComponent from "../components/date-component";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -33,11 +33,9 @@ export default async function JobPostPage({ params }: PageProps) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon-sm" asChild>
-          <Link href="/dashboard">
-            <ArrowLeft className="size-4" />
-          </Link>
-        </Button>
+        <Link variant="ghost" href="/dashboard">
+          <ArrowLeft className="size-4" />
+        </Link>
         <h1 className="text-2xl font-bold tracking-tight">
           Application Details
         </h1>
@@ -69,14 +67,18 @@ export default async function JobPostPage({ params }: PageProps) {
                   <Calendar className="size-4" />
                   Applied On
                 </div>
-                <div className="text-base">{formatDate(post.appliedOn)}</div>
+                <div className="text-base">
+                  <DateComponent date={post.appliedOn} />
+                </div>
               </div>
               <div className="space-y-1">
                 <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                   <Calendar className="size-4" />
                   Replied On
                 </div>
-                <div className="text-base">{formatDate(post.repliedOn)}</div>
+                <div className="text-base">
+                  <DateComponent date={post.repliedOn} />
+                </div>
               </div>
             </div>
 

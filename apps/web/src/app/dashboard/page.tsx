@@ -4,6 +4,7 @@ import { getProfileAction } from "./profile/actions";
 import { getJobPostsAction, getLookupDataAction } from "./actions";
 import { JobPostsTable } from "./components/job-posts-table";
 import { AddJobPostDialog } from "./components/add-job-post-dialog";
+import { AddCompanyDialog } from "./components/add-company-dialog";
 import { Briefcase } from "lucide-react";
 
 export default async function Dashboard() {
@@ -29,7 +30,10 @@ export default async function Dashboard() {
             search.
           </p>
         </div>
-        <AddJobPostDialog lookupData={lookupData} />
+        <div className="flex gap-2">
+          <AddCompanyDialog />
+          <AddJobPostDialog lookupData={lookupData} />
+        </div>
       </div>
 
       {jobPosts.length === 0 ? (
@@ -41,7 +45,10 @@ export default async function Dashboard() {
           <p className="mt-2 mb-6 text-sm text-muted-foreground max-w-xs">
             Start tracking your job search by adding your first application.
           </p>
-          <AddJobPostDialog lookupData={lookupData} />
+          <div className="flex gap-2">
+            <AddCompanyDialog />
+            <AddJobPostDialog lookupData={lookupData} />
+          </div>
         </div>
       ) : (
         <JobPostsTable data={jobPosts} />

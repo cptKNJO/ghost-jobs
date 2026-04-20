@@ -12,4 +12,9 @@ export const jobPostSchema = z.object({
   repliedOn: z.string().optional(),
 });
 
+export const companySchema = z.object({
+  name: requiredTextSchema("Enter a company name"),
+});
+
 export type JobPost = z.infer<typeof jobPostSchema>;
+export type CompanySchema = z.infer<typeof companySchema>;

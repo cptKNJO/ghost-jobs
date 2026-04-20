@@ -6,6 +6,7 @@ import { db } from "@repo/db";
 import { jobPost } from "@repo/db/schema";
 import {
   createJobPost,
+  createCompany,
   getJobPosts,
   getLookupData,
 } from "@/app/data/job-posts";
@@ -15,14 +16,18 @@ import {
   formOptions,
   ServerValidateError,
 } from "@tanstack/react-form-nextjs";
-import { jobPostSchema } from "./utils/schema";
+import { companySchema, jobPostSchema } from "./utils/schema";
 // Custom error
 import "../lib/zod";
 
-const serverValidate = createServerValidate({
-  // TODO: Isn't this supposed to be jobPostOptions?
+const serverValidateJobPost = createServerValidate({
   ...formOptions,
   onServerValidate: jobPostSchema,
+});
+
+const serverValidateCompany = createServerValidate({
+  ...formOptions,
+  onServerValidate: companySchema,
 });
 
 export async function getJobPostsAction() {
@@ -31,6 +36,42 @@ export async function getJobPostsAction() {
 
 export async function getLookupDataAction() {
   return await getLookupData();
+}
+
+export async function createCompanyAction(
+  prev: unknown,
+  formData: FormData | null,
+) {
+  try {
+    const validated = await serverValidateCompany(formData);
+
+    await createCompany(validated);
+
+    revalidatePath("/dashboard");
+    return {
+      success: true,
+      message: {
+        title: "Successfully saved!",
+        text: "Company has been added.",
+      },
+    };
+  } catch (error) {
+    if (error instanceof ServerValidateError) {
+      return error.formState;
+    }
+
+    if (error?.cause?.message.includes("unique constraint")) {
+      return {
+        error: true,
+        message: "This company already exists.",
+      };
+    }
+
+    return {
+      error: true,
+      message: "Failed to save the company, try again later.",
+    };
+  }
 }
 
 export async function createJobPostAction(
@@ -44,7 +85,7 @@ export async function createJobPostAction(
   }
 
   try {
-    const validated = await serverValidate(formData);
+    const validated = await serverValidateJobPost(formData);
 
     await createJobPost(validated);
 

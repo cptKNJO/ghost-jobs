@@ -1,0 +1,143 @@
+import { notFound } from "next/navigation";
+import {
+  ArrowLeft,
+  Building2,
+  Calendar,
+  ExternalLink,
+  Info,
+} from "lucide-react";
+import { getJobPostById } from "../data/job-posts";
+import { formatDate } from "../utils/date";
+import { Button } from "@repo/ui/components/ui/button";
+import { Badge } from "@repo/ui/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui/components/ui/card";
+import { Link } from "@repo/ui/components/ui/link";
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function JobPostPage({ params }: PageProps) {
+  const { id } = await params;
+  const post = await getJobPostById(Number(id));
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon-sm" asChild>
+          <Link href="/dashboard">
+            <ArrowLeft className="size-4" />
+          </Link>
+        </Button>
+        <h1 className="text-2xl font-bold tracking-tight">
+          Application Details
+        </h1>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="md:col-span-2">
+          <CardHeader className="flex flex-row items-start justify-between space-y-0">
+            <div>
+              <CardTitle className="text-2xl font-bold">{post.role}</CardTitle>
+              <div className="flex items-center gap-2 mt-2 text-muted-foreground">
+                <Building2 className="size-4" />
+                <span>{post.company?.name || "Unknown Company"}</span>
+              </div>
+            </div>
+            <Badge
+              variant={
+                post.status?.name === "Rejected" ? "destructive" : "secondary"
+              }
+              className="text-sm px-3 py-1"
+            >
+              {post.status?.name}
+            </Badge>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-2 gap-4 border-t pt-6">
+              <div className="space-y-1">
+                <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Calendar className="size-4" />
+                  Applied On
+                </div>
+                <div className="text-base">{formatDate(post.appliedOn)}</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Calendar className="size-4" />
+                  Replied On
+                </div>
+                <div className="text-base">{formatDate(post.repliedOn)}</div>
+              </div>
+            </div>
+
+            {post.linkToPost && (
+              <div className="space-y-2">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Job Posting
+                </div>
+                <Button variant="outline" className="w-full sm:w-auto" asChild>
+                  <a
+                    href={post.linkToPost}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2"
+                  >
+                    View Original Post
+                    <ExternalLink className="size-4" />
+                  </a>
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <Info className="size-4" />
+              Source Info
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-1">
+              <div className="text-sm font-medium text-muted-foreground">
+                Platform
+              </div>
+              <div className="text-base">
+                {post.source?.name || "Manual Entry"}
+              </div>
+            </div>
+            {post.source?.url && (
+              <div className="space-y-1 pt-2">
+                <div className="text-sm font-medium text-muted-foreground">
+                  Source Website
+                </div>
+                <div className="text-base">
+                  <a
+                    href={post.source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline flex items-center gap-1"
+                  >
+                    {new URL(post.source.url).hostname}
+                    <ExternalLink className="size-3" />
+                  </a>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

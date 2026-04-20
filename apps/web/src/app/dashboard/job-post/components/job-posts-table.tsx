@@ -15,7 +15,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@repo/ui/components/ui/dialog";
-import { Trash2, ExternalLink } from "lucide-react";
+import { Trash2, ExternalLink, Eye } from "lucide-react";
 import { deleteJobPostAction } from "../actions";
 import { FormAlerts } from "@/components/shared/form-alert";
 import { Link } from "@repo/ui/components/ui/link";
@@ -61,6 +61,14 @@ function ActionCell({ post, onActionComplete }: ActionCellProps) {
 
   return (
     <div className="flex items-center justify-end gap-2">
+      <Link
+        variant="ghost"
+        size="icon-sm"
+        href={`/dashboard/job-post/${post.id}`}
+        title="View Details"
+      >
+        <Eye className="size-4" />
+      </Link>
       {post.linkToPost && (
         <Link
           variant="ghost"
@@ -127,7 +135,11 @@ export function JobPostsTable({ data }: JobPostsTableProps) {
       accessorKey: "role",
       header: "Role",
       cell: ({ row }) => {
-        return <div className="font-medium">{row.getValue("role")}</div>;
+        return (
+          <Link href={`/dashboard/job-post/${row.original.id}`}>
+            {row.getValue("role")}
+          </Link>
+        );
       },
     },
     {

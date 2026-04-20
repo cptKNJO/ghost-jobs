@@ -97,6 +97,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
       onOpenChange={(v) => {
         if (!v) {
           handleReset();
+          form.reset();
           setOpen(v);
           return;
         }
@@ -187,12 +188,12 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                         <FieldError errors={field.state.meta.errors} />
                       )}
                       <Combobox
+                        id={field.name}
+                        name={field.name}
                         items={formattedLookupData.companies}
-                        // itemToStringValue={(item) => item.value}
+                        itemToStringValue={(item) => item.value}
                       >
                         <ComboboxInput
-                          id={field.name}
-                          name={field.name}
                           placeholder="Select a company"
                           className="mbs-auto"
                         />
@@ -212,7 +213,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
                           </ComboboxEmpty>
                           <ComboboxList>
                             {(item) => (
-                              <ComboboxItem key={item.label} value={item.value}>
+                              <ComboboxItem key={item.value} value={item}>
                                 {item.label}
                               </ComboboxItem>
                             )}

@@ -132,7 +132,6 @@ export async function editJobPostAction(
 ) {
   // Handle reset
   if (formData === null) {
-    revalidatePath(`/jobs/${id}`);
     return { success: null, error: null };
   }
 
@@ -142,6 +141,7 @@ export async function editJobPostAction(
     await editJobPost(id, validated);
 
     // TODO: This should appear on top of the edit page
+    revalidatePath(`/jobs/${id}`);
     return {
       success: true,
       message: {
@@ -151,6 +151,7 @@ export async function editJobPostAction(
     };
   } catch (error) {
     console.log(error);
+
     if (error instanceof ServerValidateError) {
       return error.formState;
     }

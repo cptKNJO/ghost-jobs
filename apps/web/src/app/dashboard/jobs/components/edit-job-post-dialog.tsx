@@ -60,6 +60,7 @@ export function EditJobPostDialog({
     startTransition(() => {
       action(null); // Pass null to trigger reset
     });
+    form.reset();
   }
 
   return (
@@ -68,7 +69,6 @@ export function EditJobPostDialog({
       onOpenChange={(v) => {
         if (!v) {
           handleReset();
-          form.reset();
           setOpen(v);
           return;
         }

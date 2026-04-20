@@ -86,10 +86,10 @@ export default function LoginForm() {
               required
               disabled={isPending}
             />
-            {error && <FieldError>{error}</FieldError>}
             <FieldDescription>
               We&apos;ll send a login link to this email.
             </FieldDescription>
+            {error && <FieldError>{error}</FieldError>}
           </Field>
         </CardContent>
         <CardFooter>

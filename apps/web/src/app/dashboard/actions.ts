@@ -33,21 +33,37 @@ export async function getLookupDataAction() {
   return await getLookupData();
 }
 
-export async function createJobPostAction(prev: unknown, formData: FormData) {
+export async function createJobPostAction(
+  prev: unknown,
+  formData: FormData | null,
+) {
+  // Handle reset
+  if (formData === null) {
+    revalidatePath("/dashboard");
+    return { success: null, error: null };
+  }
+
   try {
     const validated = await serverValidate(formData);
 
     await createJobPost(validated);
 
-    revalidatePath("/dashboard");
-    return { success: true };
+    return {
+      success: true,
+      message: {
+        title: "Successfully saved!",
+        text: "Add another job post or close the form.",
+      },
+    };
   } catch (error) {
     if (error instanceof ServerValidateError) {
       return error.formState;
     }
 
-    console.error("Failed to create job post:", error);
-    return { error: "Database error" };
+    return {
+      error: true,
+      message: "Failed to save the form, try again later.",
+    };
   }
 }
 

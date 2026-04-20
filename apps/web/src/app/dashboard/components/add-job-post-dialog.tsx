@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,12 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@repo/ui/components/ui/combobox";
-import { Plus } from "lucide-react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@repo/ui/components/ui/alert";
+import { AlertCircle, CheckCircle2Icon, Plus } from "lucide-react";
 import { createJobPostAction } from "../actions";
 import {
   initialFormState,
@@ -74,13 +79,29 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
     ...jobFormOpts,
     transform: useTransform((baseForm) => mergeForm(baseForm, state!), [state]),
   });
-  // const formErrors = useStore(form.store, (formState) => formState.errors);
-  // console.log(formErrors);
+  const formErrors = useStore(form.store, (formState) => formState.errors);
+  console.log(formErrors);
 
   const formattedLookupData = formatLookupData(lookupData);
 
+  function handleReset() {
+    startTransition(() => {
+      action(null); // Pass null to trigger reset
+    });
+  }
+
   return (
-    <Dialog open={state?.success ? false : open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        if (!v) {
+          handleReset();
+          setOpen(v);
+          return;
+        }
+        setOpen(v);
+      }}
+    >
       <DialogTrigger
         render={
           <Button className="h-9 px-4">
@@ -98,6 +119,19 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
           className="space-y-6 pb-4"
         >
           <FieldGroup>
+            {state?.error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{state?.message}</AlertDescription>
+              </Alert>
+            )}
+            {state?.success && (
+              <Alert variant="success">
+                <CheckCircle2Icon className="h-4 w-4" />
+                <AlertTitle>{state?.message.title}</AlertTitle>
+                <AlertDescription>{state?.message.text}</AlertDescription>
+              </Alert>
+            )}
             {/*{formErrors.map((error, i) => (
               <p key={i}>Error: {error}</p>
             ))}*/}
@@ -307,6 +341,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
           <DialogFooter>
             <Button
               type="submit"
+              // TODO: Find a better solution over disabling
               disabled={isLoading}
               className="w-full sm:w-auto"
             >

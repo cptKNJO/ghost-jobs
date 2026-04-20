@@ -18,7 +18,8 @@ export async function signInWithMagicLink(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message, success: false };
+    console.error(error.message);
+    return { error: "Failed to login, try again later", success: false };
   }
 
   return { error: null, success: true };

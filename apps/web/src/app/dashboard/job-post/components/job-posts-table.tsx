@@ -19,6 +19,11 @@ import { Trash2, ExternalLink } from "lucide-react";
 import { deleteJobPostAction } from "../actions";
 import { FormAlerts } from "@/components/shared/form-alert";
 import { Link } from "@repo/ui/components/ui/link";
+import dynamic from "next/dynamic";
+
+const NoSSRDate = dynamic(() => import("./date-component"), {
+  ssr: false,
+});
 
 interface JobPost {
   id: number;
@@ -152,8 +157,7 @@ export function JobPostsTable({ data }: JobPostsTableProps) {
       header: "Date Applied",
       cell: ({ row }) => {
         const date = row.getValue("appliedOn");
-        if (!date) return "-";
-        return <div>{new Date(date as string).toLocaleDateString()}</div>;
+        return <NoSSRDate date={date} />;
       },
     },
     {

@@ -3,23 +3,24 @@ import "server-only";
 import { db, eq } from "@repo/db";
 import { jobPost } from "@repo/db/schema";
 import { getProfile } from "./profile";
-import { type JobPost } from "../dashboard/utils/schema";
-import { cleanFormEntries } from "../utils/clean-form-entries";
+import { jobPostSchema, type JobPost } from "../dashboard/utils/schema";
 export { type Status, type Company, type Source } from "@repo/db/schema";
 
 function formatDateStringForDB(text: string) {
   const date = new Date(text);
 
   return date;
-  // return date.toISOString()
 }
 
 export async function createJobPost(post: JobPost) {
   const profile = await getProfile();
   if (!profile) return [];
 
+  // We need to parse again to actually get the (cleaned) output since Tanstack Form doesn't let you get it for server function above
+  const cleaned = jobPostSchema.parse(post);
+
   const formattedPost = {
-    ...cleanFormEntries(post),
+    ...cleaned,
     appliedOn: post.appliedOn ? formatDateStringForDB(post.appliedOn) : null,
     repliedOn: post.repliedOn ? formatDateStringForDB(post.repliedOn) : null,
     profileId: profile.id,

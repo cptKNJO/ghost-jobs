@@ -65,9 +65,9 @@ export async function getLookupDataAction() {
 
 export async function createJobPostAction(prev: unknown, formData: FormData) {
   try {
-    // FIXME: Must ensure non-trimmed input not there here
-    const validated = await serverValidate(cleanFormData(formData));
+    const validated = await serverValidate(formData);
 
+    // TODO: Remove this since we already check in dto
     const profile = await getProfile();
     if (!profile) {
       return { error: "Profile not found" };

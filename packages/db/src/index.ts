@@ -1,2 +1,2 @@
-export { eq } from "drizzle-orm";
+export { eq, Table, Column } from "drizzle-orm";
 export { db } from "./client";

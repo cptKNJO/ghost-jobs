@@ -39,3 +39,16 @@ z.config({
     return "Check this answer.";
   },
 });
+
+// Custom Zod schemas
+export const idFromFormSchema = z
+  .string()
+  .check(z.trim())
+  .transform((s) => (s === "" ? null : Number(s)))
+  .pipe(z.union([z.null(), z.number()]));
+
+export const requiredTextSchema = (error = "Enter the required information") =>
+  z
+    .string()
+    .transform((s) => s.trim())
+    .refine((s) => s.length > 0, { error });

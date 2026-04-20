@@ -141,6 +141,7 @@ export async function editJobPostAction(
     await editJobPost(id, validated);
 
     // TODO: This should appear on top of the edit page
+    // FIXME: Still not causing the page to close
     revalidatePath(`/jobs/${id}`);
     return {
       success: true,

@@ -176,7 +176,7 @@ export function JobPostsTable({ data }: JobPostsTableProps) {
 
   return (
     <div className="space-y-4">
-      <FormAlerts state={actionState} />
+      <FormAlerts state={actionState} onClear={() => setActionState(null)} />
       <DataTable columns={columns} data={data} />
     </div>
   );

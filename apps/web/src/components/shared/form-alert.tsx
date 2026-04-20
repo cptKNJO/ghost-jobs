@@ -1,9 +1,11 @@
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, X } from "lucide-react";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
+  AlertAction,
 } from "@repo/ui/components/ui/alert";
+import { Button } from "@repo/ui/components/ui/button";
 
 interface FormState {
   error?: boolean;
@@ -13,10 +15,25 @@ interface FormState {
 
 interface FormAlertsProps {
   state: FormState | null | undefined;
+  onClear?: () => void;
 }
 
-export function FormAlerts({ state }: FormAlertsProps) {
+export function FormAlerts({ state, onClear }: FormAlertsProps) {
   if (!state) return null;
+
+  const closeButton = onClear && (
+    <AlertAction>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        onClick={onClear}
+        className="h-8 w-8 text-current hover:bg-current/10"
+      >
+        <X className="h-4 w-4" />
+        <span className="sr-only">Dismiss</span>
+      </Button>
+    </AlertAction>
+  );
 
   // Handle Error State
   if (state.error) {
@@ -28,6 +45,7 @@ export function FormAlerts({ state }: FormAlertsProps) {
             ? state.message
             : state.message?.text || "An error occurred."}
         </AlertDescription>
+        {closeButton}
       </Alert>
     );
   }
@@ -45,6 +63,7 @@ export function FormAlerts({ state }: FormAlertsProps) {
         <AlertDescription>
           {isComplexMessage ? state.message.text : state.message}
         </AlertDescription>
+        {closeButton}
       </Alert>
     );
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
 import { updateProfileAction } from "../actions";
@@ -36,6 +36,12 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
 
   const isLoading = false;
 
+  function handleReset() {
+    startTransition(() => {
+      action(null); // Pass null to trigger reset
+    });
+  }
+
   return (
     <form
       action={action as never}
@@ -43,7 +49,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
       className="space-y-6"
     >
       <FieldGroup>
-        <FormAlerts state={state} />
+        <FormAlerts state={state} onClear={handleReset} />
         <form.Field
           name="displayName"
           children={(field) => {
@@ -57,7 +63,8 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
                 <Input
                   id={field.name}
                   name={field.name}
-                  defaultValue={field.state.value}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   aria-invalid={isInvalid}
                   placeholder="Your display name"
                   autoComplete="off"

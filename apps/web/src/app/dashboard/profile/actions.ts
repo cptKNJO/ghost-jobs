@@ -23,7 +23,7 @@ export async function updateProfileAction(
   formData: FormData | null,
 ) {
   if (formData === null) {
-    revalidatePath("/dashboard/profile");
+    // revalidatePath("/dashboard/profile");
     return { success: null, error: null };
   }
 

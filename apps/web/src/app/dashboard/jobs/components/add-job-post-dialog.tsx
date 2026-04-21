@@ -44,7 +44,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
 
   function handleReset() {
     startTransition(() => {
-      action(null); // Pass null to trigger reset
+      // action(null); // Pass null to trigger reset
     });
   }
 

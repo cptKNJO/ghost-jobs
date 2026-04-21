@@ -172,7 +172,12 @@ export async function getJobPostById(id: number) {
 export async function getLookupData() {
   try {
     const [allStatuses, allCompanies, allSources] = await Promise.all([
-      db.query.statuses.findMany({ columns: { id: true, name: true } }),
+      db.query.statuses.findMany({
+        columns: { id: true, name: true },
+        orderBy: {
+          name: "asc",
+        },
+      }),
       db.query.companies.findMany(),
       db.query.sources.findMany(),
     ]);

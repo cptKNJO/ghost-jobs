@@ -1,13 +1,15 @@
+import { getProfile } from "./data/profile";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@repo/ui/components/ui/card";
-import { getProfileAction } from "./actions";
+import { ProfileForm } from "./components/profile-form";
 
 export default async function ProfilePage() {
-  const profile = await getProfileAction();
+  const profile = await getProfile();
 
   if (!profile || "error" in profile) {
     return (
@@ -20,20 +22,17 @@ export default async function ProfilePage() {
 
   return (
     <div className="container mx-auto py-10 px-4">
-      <h1 className="text-3xl font-bold mb-6">Profile</h1>
+      <h1 className="text-3xl font-bold mb-6">Profile Settings</h1>
       <Card className="max-w-md">
         <CardHeader>
-          <CardTitle>User Information</CardTitle>
+          <CardTitle>Display Name</CardTitle>
+          <CardDescription>
+            This is your public display name. It must be between 3 and 50
+            characters.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                Display Name
-              </p>
-              <p className="text-lg font-semibold">{profile.displayName}</p>
-            </div>
-          </div>
+          <ProfileForm defaultValues={{ displayName: profile.displayName }} />
         </CardContent>
       </Card>
     </div>

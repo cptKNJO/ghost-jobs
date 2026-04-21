@@ -20,6 +20,7 @@ import DateComponent from "../components/date-component";
 import { AddJobPostDialog } from "../components/add-job-post-dialog";
 import { getJobPostByIdAction, getLookupDataAction } from "../actions";
 import { EditJobPostDialog } from "../components/edit-job-post-dialog";
+import { AppLink } from "@/components/shared/app-link";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -137,17 +138,14 @@ export default async function JobPostPage({ params }: PageProps) {
                 <div className="text-sm font-medium text-muted-foreground">
                   Source Website
                 </div>
-                <div className="text-base">
-                  <a
-                    href={post.source.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline flex items-center gap-1"
-                  >
-                    {new URL(post.source.url).hostname}
-                    <ExternalLink className="size-3" />
-                  </a>
-                </div>
+                <Link
+                  href={post.source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {new URL(post.source.url).hostname}
+                  <ExternalLink className="size-3" />
+                </Link>
               </div>
             )}
           </CardContent>

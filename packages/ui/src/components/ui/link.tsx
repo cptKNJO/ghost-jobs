@@ -14,7 +14,10 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     return (
       <a
         ref={ref}
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          variant === "link" && "px-0",
+        )}
         {...props}
       />
     );

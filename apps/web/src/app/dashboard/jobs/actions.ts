@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import {
   createJobPost,
   createCompany,
+  createSource,
   getJobPosts,
   getLookupData,
   deleteJobPost,
@@ -15,7 +16,7 @@ import {
   formOptions,
   ServerValidateError,
 } from "@tanstack/react-form-nextjs";
-import { companySchema, jobPostSchema } from "./utils/schema";
+import { companySchema, jobPostSchema, sourceSchema } from "./utils/schema";
 // Custom error
 import "../../lib/zod";
 import { idSchema } from "../../lib/zod";
@@ -28,6 +29,11 @@ const serverValidateJobPost = createServerValidate({
 const serverValidateCompany = createServerValidate({
   ...formOptions,
   onServerValidate: companySchema,
+});
+
+const serverValidateSource = createServerValidate({
+  ...formOptions,
+  onServerValidate: sourceSchema,
 });
 
 export async function getJobPostsAction() {
@@ -87,6 +93,47 @@ export async function createCompanyAction(
     return {
       error: true,
       message: "Failed to save the company, try again later.",
+    };
+  }
+}
+
+export async function createSourceAction(
+  prev: unknown,
+  formData: FormData | null,
+) {
+  if (formData === null) {
+    revalidatePath("/dashboard");
+    return { success: null, error: null };
+  }
+
+  try {
+    const validated = await serverValidateSource(formData);
+
+    await createSource(validated);
+
+    revalidatePath("/dashboard");
+    return {
+      success: true,
+      message: {
+        title: "Successfully saved!",
+        text: "Source has been added.",
+      },
+    };
+  } catch (error) {
+    if (error instanceof ServerValidateError) {
+      return error.formState;
+    }
+
+    if (error?.cause?.message.includes("unique constraint")) {
+      return {
+        error: true,
+        message: "This source with this URL already exists.",
+      };
+    }
+
+    return {
+      error: true,
+      message: "Failed to save the source, try again later.",
     };
   }
 }

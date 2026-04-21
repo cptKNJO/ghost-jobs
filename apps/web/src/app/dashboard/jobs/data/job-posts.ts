@@ -1,14 +1,16 @@
 import "server-only";
 
 import { db, eq, and } from "@repo/db";
-import { companies, jobPost } from "@repo/db/schema";
+import { companies, jobPost, sources } from "@repo/db/schema";
 export { type Status, type Company, type Source } from "@repo/db/schema";
 import { getProfile } from "../../profile/data/profile";
 import {
   companySchema,
   jobPostSchema,
+  sourceSchema,
   type CompanySchema,
   type JobPost,
+  type SourceSchema,
 } from "../utils/schema";
 
 function formatDateStringForDB(text: string) {
@@ -44,6 +46,21 @@ export async function createCompany(data: CompanySchema) {
   } catch (error) {
     // Throw the supabase error - not the drizzle error
     throw Error("Failed to save the company", { cause: error.cause });
+  }
+}
+
+export async function createSource(data: SourceSchema) {
+  const profile = await getProfile();
+  if (!profile) return null;
+
+  const cleaned = sourceSchema.parse(data);
+
+  try {
+    const [inserted] = await db.insert(sources).values(cleaned).returning();
+
+    return inserted;
+  } catch (error) {
+    throw Error("Failed to save the source", { cause: error.cause });
   }
 }
 

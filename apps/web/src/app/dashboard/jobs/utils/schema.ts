@@ -16,5 +16,11 @@ export const companySchema = z.object({
   name: requiredTextSchema("Enter a company name"),
 });
 
+export const sourceSchema = z.object({
+  name: requiredTextSchema("Enter a source name"),
+  url: z.url("Enter a valid URL"),
+});
+
 export type JobPost = z.infer<typeof jobPostSchema>;
 export type CompanySchema = z.infer<typeof companySchema>;
+export type SourceSchema = z.infer<typeof sourceSchema>;

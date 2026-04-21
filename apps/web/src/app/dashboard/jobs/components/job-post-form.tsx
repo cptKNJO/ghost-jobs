@@ -50,6 +50,7 @@ import {
 } from "@/app/dashboard/job-post/data/job-posts";
 import { FormAlerts } from "@/components/shared/form-alert";
 import { AddCompanyDialog } from "./add-company-dialog";
+import { AddSourceDialog } from "./add-source-dialog";
 
 interface AddJobPostDialogProps {
   form: ReturnType<typeof useForm>;
@@ -62,8 +63,6 @@ interface AddJobPostDialogProps {
   };
 }
 
-const companies = [];
-
 function formatLookupData(lookupData: AddJobPostDialogProps["lookupData"]) {
   return {
     ...lookupData,
@@ -71,6 +70,10 @@ function formatLookupData(lookupData: AddJobPostDialogProps["lookupData"]) {
     companies: lookupData?.companies.map((d) => ({
       label: d.name,
       value: d.id,
+    })),
+    sources: lookupData?.sources.map((s) => ({
+      label: s.name,
+      value: s.id,
     })),
   };
 }
@@ -84,6 +87,7 @@ export function JobPostForm({
 }: AddJobPostDialogProps) {
   const [open, setOpen] = useState(false);
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
+  const [sourceDialogOpen, setSourceDialogOpen] = useState(false);
   const isLoading = false;
 
   // const [state, action] = useActionState(createJobPostAction, initialFormState);
@@ -219,17 +223,36 @@ export function JobPostForm({
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
-                    <Combobox items={companies}>
+                    <Combobox
+                      id={field.name}
+                      name={field.name}
+                      items={formattedLookupData.sources}
+                      itemToStringValue={(item) => item.value}
+                      defaultValue={formattedLookupData?.sources.find(
+                        (s) => s.value === field.state.value,
+                      )}
+                    >
                       <ComboboxInput
-                        id={field.name}
-                        name={field.name}
                         placeholder="Select a source"
                         className="mbs-auto"
                       />
                       <ComboboxContent>
+                        <ComboboxEmpty className="p-0">
+                          <div className="flex flex-col items-center justify-center py-4 px-4 text-center">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              type="button"
+                              onClick={() => setSourceDialogOpen(true)}
+                            >
+                              <Plus className="h-4 w-4" />
+                              Add source
+                            </Button>
+                          </div>
+                        </ComboboxEmpty>
                         <ComboboxList>
                           {(item) => (
-                            <ComboboxItem key={item.label} value={item}>
+                            <ComboboxItem key={item.value} value={item}>
                               {item.label}
                             </ComboboxItem>
                           )}
@@ -325,6 +348,10 @@ export function JobPostForm({
         open={companyDialogOpen}
         onOpenChange={setCompanyDialogOpen}
         showTrigger={false}
+      />
+      <AddSourceDialog
+        open={sourceDialogOpen}
+        onOpenChange={setSourceDialogOpen}
       />
     </>
   );

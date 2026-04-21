@@ -17,3 +17,10 @@ export const companyFormOpts = formOptions({
     name: "",
   },
 });
+
+export const sourceFormOpts = formOptions({
+  defaultValues: {
+    name: "",
+    url: "",
+  },
+});

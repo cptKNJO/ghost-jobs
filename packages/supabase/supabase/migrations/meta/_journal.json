@@ -43,6 +43,13 @@
       "when": 1776603078876,
       "tag": "20260419125118_narrow_red_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776780404301,
+      "tag": "20260421140644_steep_wolverine",
+      "breakpoints": true
     }
   ]
 }

@@ -92,6 +92,7 @@ export const jobPost = pgTable("job_post", {
   // Other fields
   role: text("role").notNull(),
   linkToPost: text("link_to_post"),
+  ...timestamps,
 });
 
 export const jobPostRelations = relations(jobPost, ({ one }) => ({

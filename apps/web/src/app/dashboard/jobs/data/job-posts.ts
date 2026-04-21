@@ -174,12 +174,14 @@ export async function getLookupData() {
     const [allStatuses, allCompanies, allSources] = await Promise.all([
       db.query.statuses.findMany({
         columns: { id: true, name: true },
-        orderBy: {
-          name: "asc",
-        },
+        orderBy: (statuses, { asc }) => [asc(statuses.name)],
       }),
-      db.query.companies.findMany(),
-      db.query.sources.findMany(),
+      db.query.companies.findMany({
+        orderBy: (companies, { asc }) => [asc(companies.name)],
+      }),
+      db.query.sources.findMany({
+        orderBy: (sources, { asc }) => [asc(sources.name)],
+      }),
     ]);
 
     return {

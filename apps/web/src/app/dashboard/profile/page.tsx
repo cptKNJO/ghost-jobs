@@ -13,7 +13,7 @@ export default async function ProfilePage() {
 
   if (!profile || "error" in profile) {
     return (
-      <div className="container mx-auto py-10 px-4">
+      <div className="">
         <h1 className="text-3xl font-bold mb-6">Profile</h1>
         <p>Could not load profile. Please try again later.</p>
       </div>
@@ -21,7 +21,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="container mx-auto py-10 px-4">
+    <div className="">
       <h1 className="text-3xl font-bold mb-6">Profile Settings</h1>
       <Card className="max-w-md">
         <CardHeader>

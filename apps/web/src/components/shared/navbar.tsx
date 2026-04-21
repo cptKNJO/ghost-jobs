@@ -21,6 +21,9 @@ export async function Navbar() {
                 <Link href="/dashboard">
                   <Button variant="ghost">Dashboard</Button>
                 </Link>
+                <Link href="/dashboard/profile">
+                  <Button variant="ghost">Profile</Button>
+                </Link>
                 <form action="/auth/signout" method="post">
                   <Button type="submit" variant="outline">
                     Logout

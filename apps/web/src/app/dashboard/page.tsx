@@ -25,8 +25,7 @@ export default async function Dashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">My Applications</h1>
           <p className="text-muted-foreground">
-            Welcome back, {profile?.displayName}! Track and manage your job
-            search.
+            Welcome back, {profile?.displayName}!
           </p>
         </div>
         <div className="flex gap-2">

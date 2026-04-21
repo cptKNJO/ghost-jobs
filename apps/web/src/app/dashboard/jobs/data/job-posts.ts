@@ -134,7 +134,7 @@ export async function getJobPosts() {
         status: true,
         source: true,
       },
-      orderBy: (jobPost, { desc }) => [desc(jobPost.appliedOn)],
+      orderBy: (jobPost, { desc }) => [desc(jobPost.updatedAt)],
     });
 
     return posts;

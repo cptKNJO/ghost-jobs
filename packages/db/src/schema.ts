@@ -64,10 +64,10 @@ export const profiles = pgTable("profiles", {
 });
 
 export const profileRelations = relations(profiles, ({ many }) => ({
-  jobPosts: many(jobPost),
+  jobPosts: many(jobPosts),
 }));
 
-export const jobPost = pgTable("job_post", {
+export const jobPosts = pgTable("job_posts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   // FKs
   companyId: integer("company_id").references(() => companies.id),
@@ -95,27 +95,27 @@ export const jobPost = pgTable("job_post", {
   ...timestamps,
 });
 
-export const jobPostRelations = relations(jobPost, ({ one }) => ({
+export const jobPostsRelations = relations(jobPosts, ({ one }) => ({
   company: one(companies, {
-    fields: [jobPost.companyId],
+    fields: [jobPosts.companyId],
     references: [companies.id],
   }),
   source: one(sources, {
-    fields: [jobPost.sourceId],
+    fields: [jobPosts.sourceId],
     references: [sources.id],
   }),
   status: one(statuses, {
-    fields: [jobPost.statusId],
+    fields: [jobPosts.statusId],
     references: [statuses.id],
   }),
   profile: one(profiles, {
-    fields: [jobPost.profileId],
+    fields: [jobPosts.profileId],
     references: [profiles.id],
   }),
 }));
 
 // Schemas for validators
-export const insertJobPostSchema = createInsertSchema(jobPost);
+export const insertjobPostsSchema = createInsertSchema(jobPosts);
 // Types
 export type Status = InferSelectModel<typeof statuses>;
 export type Company = InferSelectModel<typeof companies>;

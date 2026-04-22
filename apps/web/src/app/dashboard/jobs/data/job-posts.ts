@@ -1,7 +1,7 @@
 import "server-only";
 
 import { db, eq, and } from "@repo/db";
-import { companies, jobPost, sources } from "@repo/db/schema";
+import { companies, jobPosts, sources } from "@repo/db/schema";
 export { type Status, type Company, type Source } from "@repo/db/schema";
 import { getProfile } from "../../profile/data/profile";
 import {
@@ -71,7 +71,7 @@ export async function createJobPost(post: JobPost) {
   const formattedPost = cleanPost(post, profile.id);
 
   try {
-    const insertedJobPost = await db.insert(jobPost).values(formattedPost);
+    const insertedJobPost = await db.insert(jobPosts).values(formattedPost);
 
     return insertedJobPost;
   } catch (error) {
@@ -87,15 +87,15 @@ export async function editJobPost(id: number, post: JobPost) {
 
   try {
     const [updatedRow] = await db
-      .update(jobPost)
+      .update(jobPosts)
       .set(formattedPost)
       .where(
         and(
-          eq(jobPost.id, id),
-          eq(jobPost.profileId, profile.id), // Authorization gate
+          eq(jobPosts.id, id),
+          eq(jobPosts.profileId, profile.id), // Authorization gate
         ),
       )
-      .returning({ id: jobPost.id });
+      .returning({ id: jobPosts.id });
 
     // If updatedRow is undefined, the ID/Profile didn't match
     if (!updatedRow) {
@@ -115,8 +115,8 @@ export async function deleteJobPost(id: number) {
 
   try {
     await db
-      .delete(jobPost)
-      .where(and(eq(jobPost.id, id), eq(jobPost.profileId, profile.id)));
+      .delete(jobPosts)
+      .where(and(eq(jobPosts.id, id), eq(jobPosts.profileId, profile.id)));
   } catch (error) {
     throw Error("Failed to delete the job post", { cause: error });
   }
@@ -127,8 +127,8 @@ export async function getJobPosts() {
   if (!profile) return [];
 
   try {
-    const posts = await db.query.jobPost.findMany({
-      where: eq(jobPost.profileId, profile.id),
+    const posts = await db.query.jobPosts.findMany({
+      where: eq(jobPosts.profileId, profile.id),
       with: {
         company: true,
         status: true,
@@ -149,9 +149,9 @@ export async function getJobPostById(id: number) {
   if (!profile) return null;
 
   try {
-    const post = await db.query.jobPost.findFirst({
-      where: (jobPost, { and, eq }) =>
-        and(eq(jobPost.id, id), eq(jobPost.profileId, profile.id)),
+    const post = await db.query.jobPosts.findFirst({
+      where: (jobPosts, { and, eq }) =>
+        and(eq(jobPosts.id, id), eq(jobPosts.profileId, profile.id)),
       columns: {
         profileId: false,
       },

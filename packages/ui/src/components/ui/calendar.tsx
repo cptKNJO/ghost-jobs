@@ -8,11 +8,7 @@ import {
 
 import { cn } from "@repo/ui/lib/utils";
 import { Button, buttonVariants } from "@repo/ui/components/ui/button";
-import {
-  CaretLeftIcon,
-  CaretRightIcon,
-  CaretDownIcon,
-} from "@phosphor-icons/react";
+import { Icon } from "./icon";
 
 function Calendar({
   className,
@@ -149,18 +145,30 @@ function Calendar({
         Chevron: ({ className, orientation, ...props }) => {
           if (orientation === "left") {
             return (
-              <CaretLeftIcon className={cn("size-4", className)} {...props} />
+              <Icon
+                name="caret-left"
+                className={cn("size-4", className)}
+                {...props}
+              />
             );
           }
 
           if (orientation === "right") {
             return (
-              <CaretRightIcon className={cn("size-4", className)} {...props} />
+              <Icon
+                name="caret-right"
+                className={cn("size-4", className)}
+                {...props}
+              />
             );
           }
 
           return (
-            <CaretDownIcon className={cn("size-4", className)} {...props} />
+            <Icon
+              name="caret-down"
+              className={cn("size-4", className)}
+              {...props}
+            />
           );
         },
         DayButton: ({ ...props }) => (

@@ -3,7 +3,7 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 
 import { cn } from "@repo/ui/lib/utils";
 import { Button } from "@repo/ui/components/ui/button";
-import { XIcon } from "@phosphor-icons/react";
+import { Icon } from "./icon";
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
@@ -68,7 +68,7 @@ function DialogContent({
               />
             }
           >
-            <XIcon />
+            <Icon name="x" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

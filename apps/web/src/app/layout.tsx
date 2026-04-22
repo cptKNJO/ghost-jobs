@@ -26,6 +26,8 @@ export const metadata: Metadata = {
     "Organize your job hunt with JobTracker. Built for software engineers.",
 };
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -35,11 +37,19 @@ export default async function RootLayout({
     <html
       lang="en"
       className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
+      suppressHydrationWarning
     >
-      <body className="flex flex-col min-h-screen bg-background text-foreground">
-        <Navbar />
-        <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
-        <Footer />
+      <body className="flex flex-col min-h-screen bg-background text-foreground font-sans">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

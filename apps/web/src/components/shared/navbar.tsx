@@ -1,6 +1,7 @@
 import { getUser } from "@/app/lib/dal/auth";
 import { Button } from "@repo/ui/components/ui/button";
 import Link from "next/link";
+import { ModeToggle } from "../mode-toggle";
 
 export async function Navbar() {
   const user = await getUser();
@@ -35,6 +36,7 @@ export async function Navbar() {
                 <Button>Login</Button>
               </Link>
             )}
+            <ModeToggle />
           </div>
         </div>
       </div>

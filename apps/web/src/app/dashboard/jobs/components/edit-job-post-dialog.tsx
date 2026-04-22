@@ -10,8 +10,8 @@ import {
   DialogFooter,
 } from "@repo/ui/components/ui/dialog";
 import { Button } from "@repo/ui/components/ui/button";
-import { Plus } from "lucide-react";
-import { editJobPostAction, getJobPostByIdAction } from "../actions";
+import { Icon } from "@repo/ui/components/ui/icon";
+import { editJobPostAction } from "../actions";
 import {
   FormOptions,
   initialFormState,
@@ -78,7 +78,7 @@ export function EditJobPostDialog({
       <DialogTrigger
         render={
           <Button className="h-9 px-4">
-            <Plus className="mr-2 size-4" /> Edit Application
+            <Icon name="plus" className="mr-2 size-4" /> Edit Application
           </Button>
         }
       />

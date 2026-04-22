@@ -6,12 +6,10 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from "@repo/ui/components/ui/dialog";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
-import { Plus } from "lucide-react";
 import { createCompanyAction } from "../actions";
 import {
   initialFormState,
@@ -37,7 +35,6 @@ interface AddCompanyDialogProps {
 export function AddCompanyDialog({
   open: controlledOpen,
   onOpenChange: setControlledOpen,
-  showTrigger = true,
 }: AddCompanyDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false);
 

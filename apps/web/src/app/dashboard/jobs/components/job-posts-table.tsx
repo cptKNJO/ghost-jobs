@@ -15,7 +15,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@repo/ui/components/ui/dialog";
-import { Trash2, ExternalLink, Eye } from "lucide-react";
+import { Icon } from "@repo/ui/components/ui/icon";
 import { deleteJobPostAction } from "../actions";
 import { FormAlerts } from "@/components/shared/form-alert";
 import { Link } from "@repo/ui/components/ui/link";
@@ -67,7 +67,7 @@ function ActionCell({ post, onActionComplete }: ActionCellProps) {
         href={`/dashboard/jobs/${post.id}`}
         title="View Details"
       >
-        <Eye className="size-4" />
+        <Icon name="eye" className="size-4" />
       </Link>
       {post.linkToPost && (
         <Link
@@ -77,7 +77,7 @@ function ActionCell({ post, onActionComplete }: ActionCellProps) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <ExternalLink className="size-4" />
+          <Icon name="external-link" className="size-4" />
         </Link>
       )}
 
@@ -92,7 +92,7 @@ function ActionCell({ post, onActionComplete }: ActionCellProps) {
             />
           }
         >
-          <Trash2 className="size-4" />
+          <Icon name="trash" className="size-4" />
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

@@ -10,7 +10,7 @@ import {
   DialogFooter,
 } from "@repo/ui/components/ui/dialog";
 import { Button } from "@repo/ui/components/ui/button";
-import { Plus } from "lucide-react";
+import { Icon } from "@repo/ui/components/ui/icon";
 import { createJobPostAction } from "../actions";
 import {
   initialFormState,
@@ -64,7 +64,7 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
       <DialogTrigger
         render={
           <Button className="h-9 px-4">
-            <Plus className="mr-2 size-4" /> New Application
+            <Icon name="plus" className="mr-2 size-4" /> New Application
           </Button>
         }
       />

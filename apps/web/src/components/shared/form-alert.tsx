@@ -1,4 +1,3 @@
-import { AlertCircle, CheckCircle2, X } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -6,6 +5,8 @@ import {
   AlertAction,
 } from "@repo/ui/components/ui/alert";
 import { Button } from "@repo/ui/components/ui/button";
+import { useEffect, useState } from "react";
+import { Icon } from "@repo/ui/components/ui/icon";
 
 interface FormState {
   error?: boolean;
@@ -19,17 +20,31 @@ interface FormAlertsProps {
 }
 
 export function FormAlerts({ state, onClear }: FormAlertsProps) {
-  if (!state) return null;
+  const [isVisible, setIsVisible] = useState(true);
 
-  const closeButton = onClear && (
+  // Re-show alert when state changes (e.g. new error/success)
+  useEffect(() => {
+    if (state) {
+      setIsVisible(true);
+    }
+  }, [state]);
+
+  if (!state || !isVisible) return null;
+
+  const handleClose = () => {
+    setIsVisible(false);
+    onClear?.();
+  };
+
+  const closeButton = (
     <AlertAction>
       <Button
         variant="ghost"
         size="icon-sm"
-        onClick={onClear}
+        onClick={handleClose}
         className="h-8 w-8 text-current hover:bg-current/10"
       >
-        <X className="h-4 w-4" />
+        <Icon name="x" className="h-4 w-4" />
         <span className="sr-only">Dismiss</span>
       </Button>
     </AlertAction>
@@ -37,13 +52,17 @@ export function FormAlerts({ state, onClear }: FormAlertsProps) {
 
   // Handle Error State
   if (state.error) {
+    const isComplexMessage = typeof state.message === "object";
     return (
       <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
+        <Icon name="warning-circle" className="h-4 w-4" />
+        {isComplexMessage && state.message.title && (
+          <AlertTitle>{state.message.title}</AlertTitle>
+        )}
         <AlertDescription>
-          {typeof state.message === "string"
-            ? state.message
-            : state.message?.text || "An error occurred."}
+          {isComplexMessage
+            ? state.message.text
+            : state.message || "An error occurred."}
         </AlertDescription>
         {closeButton}
       </Alert>
@@ -56,13 +75,15 @@ export function FormAlerts({ state, onClear }: FormAlertsProps) {
 
     return (
       <Alert variant="success">
-        <CheckCircle2 className="h-4 w-4" />
-        {isComplexMessage && state.message.title && (
-          <AlertTitle>{state.message.title}</AlertTitle>
-        )}
-        <AlertDescription>
-          {isComplexMessage ? state.message.text : state.message}
-        </AlertDescription>
+        <Icon name="check-circle" className="h-4 w-4" />
+        <div className="flex-1">
+          {isComplexMessage && state.message.title && (
+            <AlertTitle>{state.message.title}</AlertTitle>
+          )}
+          <AlertDescription>
+            {isComplexMessage ? state.message.text : state.message}
+          </AlertDescription>
+        </div>
         {closeButton}
       </Alert>
     );

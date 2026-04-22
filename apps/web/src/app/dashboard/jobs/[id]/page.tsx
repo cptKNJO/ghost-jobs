@@ -1,11 +1,5 @@
 import { notFound } from "next/navigation";
-import {
-  ArrowLeft,
-  Building2,
-  Calendar,
-  ExternalLink,
-  Info,
-} from "lucide-react";
+import { Icon } from "@repo/ui/components/ui/icon";
 import { getJobPostById } from "../data/job-posts";
 import { Button } from "@repo/ui/components/ui/button";
 import { Badge } from "@repo/ui/components/ui/badge";
@@ -17,10 +11,8 @@ import {
 } from "@repo/ui/components/ui/card";
 import { Link } from "@repo/ui/components/ui/link";
 import DateComponent from "../components/date-component";
-import { AddJobPostDialog } from "../components/add-job-post-dialog";
 import { getJobPostByIdAction, getLookupDataAction } from "../actions";
 import { EditJobPostDialog } from "../components/edit-job-post-dialog";
-import { AppLink } from "@/components/shared/app-link";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -44,7 +36,7 @@ export default async function JobPostPage({ params }: PageProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link variant="ghost" href="/dashboard">
-            <ArrowLeft className="size-4" />
+            <Icon name="arrow-left" className="size-4" />
           </Link>
           <h1 className="text-2xl font-bold tracking-tight">
             Application Details
@@ -61,7 +53,7 @@ export default async function JobPostPage({ params }: PageProps) {
             <div>
               <CardTitle className="text-2xl font-bold">{post.role}</CardTitle>
               <div className="flex items-center gap-2 mt-2 text-muted-foreground">
-                <Building2 className="size-4" />
+                <Icon name="buildings" className="size-4" />
                 <span>{post.company?.name || "Unknown Company"}</span>
               </div>
             </div>
@@ -78,7 +70,7 @@ export default async function JobPostPage({ params }: PageProps) {
             <div className="grid grid-cols-2 gap-4 border-t pt-6">
               <div className="space-y-1">
                 <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Calendar className="size-4" />
+                  <Icon name="calendar" className="size-4" />
                   Applied On
                 </div>
                 <div className="text-base">
@@ -87,7 +79,7 @@ export default async function JobPostPage({ params }: PageProps) {
               </div>
               <div className="space-y-1">
                 <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Calendar className="size-4" />
+                  <Icon name="calendar" className="size-4" />
                   Replied On
                 </div>
                 <div className="text-base">
@@ -109,7 +101,7 @@ export default async function JobPostPage({ params }: PageProps) {
                     className="flex items-center gap-2"
                   >
                     View Original Post
-                    <ExternalLink className="size-4" />
+                    <Icon name="external-link" className="size-4" />
                   </a>
                 </Button>
               </div>
@@ -120,7 +112,7 @@ export default async function JobPostPage({ params }: PageProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg font-semibold flex items-center gap-2">
-              <Info className="size-4" />
+              <Icon name="info" className="size-4" />
               Source Info
             </CardTitle>
           </CardHeader>
@@ -144,7 +136,7 @@ export default async function JobPostPage({ params }: PageProps) {
                   rel="noopener noreferrer"
                 >
                   {new URL(post.source.url).hostname}
-                  <ExternalLink className="size-3" />
+                  <Icon name="external-link" className="size-3" />
                 </Link>
               </div>
             )}

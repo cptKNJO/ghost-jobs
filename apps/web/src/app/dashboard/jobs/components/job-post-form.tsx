@@ -1,14 +1,7 @@
 "use client";
 
-import { startTransition, useActionState, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@repo/ui/components/ui/dialog";
+import { useForm } from "@tanstack/react-form-nextjs";
+import { useState } from "react";
 import { Button } from "@repo/ui/components/ui/button";
 import { Input } from "@repo/ui/components/ui/input";
 import {
@@ -19,21 +12,13 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@repo/ui/components/ui/combobox";
-import { Plus } from "lucide-react";
-import { createJobPostAction } from "../actions";
-import {
-  initialFormState,
-  mergeForm,
-  useForm,
-  useTransform,
-} from "@tanstack/react-form-nextjs";
+import { Icon } from "@repo/ui/components/ui/icon";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@repo/ui/components/ui/field";
-import { jobFormOpts } from "../utils/job-form-opts";
 import {
   Select,
   SelectContent,
@@ -53,7 +38,8 @@ import { AddCompanyDialog } from "./add-company-dialog";
 import { AddSourceDialog } from "./add-source-dialog";
 
 interface AddJobPostDialogProps {
-  form: ReturnType<typeof useForm>;
+  id: string;
+  form: ReturnType<typeof useForm<any, any>>;
   action: any;
   state: any;
   lookupData: {
@@ -85,16 +71,8 @@ export function JobPostForm({
   state,
   lookupData,
 }: AddJobPostDialogProps) {
-  const [open, setOpen] = useState(false);
   const [companyDialogOpen, setCompanyDialogOpen] = useState(false);
   const [sourceDialogOpen, setSourceDialogOpen] = useState(false);
-  const isLoading = false;
-
-  // const [state, action] = useActionState(createJobPostAction, initialFormState);
-  // const form = useForm({
-  //   ...jobFormOpts,
-  //   transform: useTransform((baseForm) => mergeForm(baseForm, state!), [state]),
-  // });
 
   const formattedLookupData = formatLookupData(lookupData);
 
@@ -191,7 +169,7 @@ export function JobPostForm({
                               type="button"
                               onClick={() => setCompanyDialogOpen(true)}
                             >
-                              <Plus className="h-4 w-4" />
+                              <Icon name="plus" className="h-4 w-4" />
                               Add company
                             </Button>
                           </div>
@@ -245,7 +223,7 @@ export function JobPostForm({
                               type="button"
                               onClick={() => setSourceDialogOpen(true)}
                             >
-                              <Plus className="h-4 w-4" />
+                              <Icon name="plus" className="h-4 w-4" />
                               Add source
                             </Button>
                           </div>

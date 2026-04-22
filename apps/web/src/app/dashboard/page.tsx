@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Briefcase } from "lucide-react";
+import { Icon } from "@repo/ui/components/ui/icon";
 import { getUser } from "@/app/lib/dal/auth";
 import { getProfileAction } from "./profile/actions";
 import { getJobPostsAction, getLookupDataAction } from "./jobs/actions";
@@ -36,7 +36,7 @@ export default async function Dashboard() {
       {jobPosts.length === 0 ? (
         <div className="flex min-h-[400px] flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center animate-in fade-in duration-500">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted">
-            <Briefcase className="h-6 w-6 text-muted-foreground" />
+            <Icon name="briefcase" className="h-6 w-6 text-muted-foreground" />
           </div>
           <h3 className="mt-4 text-lg font-semibold">No applications yet</h3>
           <p className="mt-2 mb-6 text-sm text-muted-foreground max-w-xs">

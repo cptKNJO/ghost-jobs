@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-
 import { Button } from "@repo/ui/components/ui/button";
+import { Icon } from "@repo/ui/components/ui/icon";
 
 export default function Home() {
   return (
@@ -18,7 +17,7 @@ export default function Home() {
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Link href="/login">
             <Button size="lg" className="h-12 px-8">
-              Get Started <ArrowRight className="ml-2 h-4 w-4" />
+              Get Started <Icon name="arrow-right" className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>

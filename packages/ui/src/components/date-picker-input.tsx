@@ -1,124 +1,63 @@
 "use client";
 
 import * as React from "react";
-import { CalendarIcon } from "@phosphor-icons/react";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@repo/ui/components/ui/input-group";
+import { format } from "date-fns";
+
+import { cn } from "@repo/ui/lib/utils";
+import { Button } from "@repo/ui/components/ui/button";
+import { Calendar } from "@repo/ui/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@repo/ui/components/ui/popover";
-import { Calendar } from "@repo/ui/components/ui/calendar";
+import { Icon } from "@repo/ui/components/ui/icon";
 
-interface DatePickerProps {
+interface DatePickerInputProps {
   id?: string;
   name?: string;
-  defaultValue?: Date;
-  onChange?: (date: Date | undefined) => void;
-  placeholder?: string;
-}
-
-function formatDate(date: Date | undefined) {
-  if (!date) return "";
-
-  return date.toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-function isValidDate(date: Date | undefined) {
-  if (!date) {
-    return false;
-  }
-  return !isNaN(date.getTime());
+  defaultValue?: string | Date;
 }
 
 export function DatePickerInput({
   id,
   name,
   defaultValue,
-  onChange,
-  placeholder = "Select date...",
-}: DatePickerProps) {
-  const [open, setOpen] = React.useState(false);
-
-  // Internal state to manage the UI display
-  const [date, setDate] = React.useState<Date | undefined>(defaultValue);
-  const [timeZone, setTimeZone] = React.useState<string | undefined>(undefined);
-  const [month, setMonth] = React.useState<Date | undefined>(date);
-  const [value, setValue] = React.useState(formatDate(date));
-
-  const handleDateChange = (newDate: Date | undefined) => {
-    setDate(newDate);
-    // setValue(formatDate(newDate));
-    setMonth(newDate);
-
-    // Notify TanStack Form or parent
-    // onChange?.(newDate);
-  };
-
-  React.useEffect(() => {
-    setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
-  }, []);
+}: DatePickerInputProps) {
+  const [date, setDate] = React.useState<Date | undefined>(
+    defaultValue ? new Date(defaultValue) : undefined,
+  );
 
   return (
-    <InputGroup>
-      <InputGroupInput
+    <Popover>
+      <PopoverTrigger
+        render={
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-full justify-start text-left font-normal h-9",
+              !date && "text-muted-foreground",
+            )}
+          >
+            <Icon name="calendar" className="mr-2 h-4 w-4" />
+            {date ? format(date, "PPP") : <span>Pick a date</span>}
+          </Button>
+        }
+      />
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+        />
+      </PopoverContent>
+      <input
+        type="hidden"
         id={id}
         name={name}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => {
-          const date = e.target.value;
-          setValue(date);
-          if (isValidDate(date)) {
-            handleDateChange(date);
-          }
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "ArrowDown") {
-            e.preventDefault();
-            setOpen(true);
-          }
-        }}
+        value={date ? date.toISOString() : ""}
       />
-      <InputGroupAddon align="inline-end">
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger
-            render={
-              <InputGroupButton
-                type="button" // Prevent form submission
-                variant="ghost"
-                size="icon-xs"
-                aria-label="Open calendar"
-              >
-                <CalendarIcon />
-              </InputGroupButton>
-            }
-          />
-          <PopoverContent className="w-auto p-0" align="end" sideOffset={10}>
-            <Calendar
-              mode="single"
-              selected={date}
-              month={month}
-              onMonthChange={setMonth}
-              onSelect={(date) => {
-                setDate(date);
-                setValue(formatDate(date));
-                setOpen(false);
-              }}
-              timeZone={timeZone}
-            />
-          </PopoverContent>
-        </Popover>
-      </InputGroupAddon>
-    </InputGroup>
+    </Popover>
   );
 }

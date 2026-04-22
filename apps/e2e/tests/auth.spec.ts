@@ -47,7 +47,7 @@ test.describe("Authentication Flow", () => {
 
     // 5. Verify redirection to Dashboard
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.locator("body")).toContainText(/you are logged in/i);
+    await expect(page.locator("body")).toContainText(/logout/i);
     await expect(page.getByRole("link", { name: /dashboard/i })).toBeVisible();
   });
 
@@ -77,7 +77,7 @@ test.describe("Authentication Flow", () => {
     // 3. Follow Magic Link to log in
     await page.goto(magicLink);
     await expect(page).toHaveURL(/\/dashboard/);
-    await expect(page.locator("body")).toContainText(/you are logged in/i);
+    await expect(page.locator("body")).toContainText(/logout/i);
 
     // 4. Click Logout button
     const logoutButton = page.getByRole("button", { name: /logout/i });
@@ -105,9 +105,7 @@ test.describe("Authentication Flow", () => {
 
     // Capture display name
     const textContent = await page.locator("body").textContent();
-    const displayNameMatch = textContent?.match(
-      /(?<=You are logged in, )[^!]+/,
-    );
+    const displayNameMatch = textContent?.match(/(?<=Welcome back, )[^!]+/);
     const firstDisplayName = displayNameMatch ? displayNameMatch[1] : null;
     expect(firstDisplayName).not.toBeNull();
 
@@ -139,7 +137,7 @@ test.describe("Authentication Flow", () => {
 
     const newTextContent = await page.locator("body").textContent();
     const newDisplayNameMatch = newTextContent?.match(
-      /(?<=You are logged in, )[^!]+/,
+      /(?<=Welcome back, )[^!]+/,
     );
     const secondDisplayName = newDisplayNameMatch
       ? newDisplayNameMatch[1]

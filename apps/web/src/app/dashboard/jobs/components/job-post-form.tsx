@@ -28,11 +28,7 @@ import {
 } from "@repo/ui/components/ui/select";
 import { DatePickerInput } from "@repo/ui/components/date-picker-input";
 
-import {
-  type Status,
-  type Company,
-  type Source,
-} from "@/app/dashboard/job-post/data/job-posts";
+import { type Status, type Company, type Source } from "../data/types";
 import { FormAlerts } from "@/components/shared/form-alert";
 import { AddCompanyDialog } from "./add-company-dialog";
 import { AddSourceDialog } from "./add-source-dialog";

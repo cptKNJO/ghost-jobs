@@ -1,4 +1,3 @@
-import { getProfile } from "./data/profile";
 import {
   Card,
   CardContent,
@@ -7,9 +6,10 @@ import {
   CardDescription,
 } from "@repo/ui/components/ui/card";
 import { ProfileForm } from "./components/profile-form";
+import { getProfileAction } from "./actions";
 
 export default async function ProfilePage() {
-  const profile = await getProfile();
+  const profile = await getProfileAction();
 
   if (!profile || "error" in profile) {
     return (

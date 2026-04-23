@@ -2,7 +2,6 @@ import "server-only";
 
 import { db, eq, and } from "@repo/db";
 import { companies, jobPosts, sources } from "@repo/db/schema";
-export { type Status, type Company, type Source } from "@repo/db/schema";
 import { getProfile } from "../../profile/data/profile";
 import {
   companySchema,

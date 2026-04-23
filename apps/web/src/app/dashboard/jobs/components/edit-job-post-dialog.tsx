@@ -22,7 +22,7 @@ import {
 
 import { jobFormOpts } from "../utils/job-form-opts";
 
-import { type Status, type Company, type Source } from "../data/job-posts";
+import { type Status, type Company, type Source } from "../data/types";
 import { JobPostForm } from "./job-post-form";
 import { JobPost } from "../utils/schema";
 

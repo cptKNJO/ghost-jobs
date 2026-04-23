@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { Icon } from "@repo/ui/components/ui/icon";
-import { getJobPostById } from "../data/job-posts";
 import { Button } from "@repo/ui/components/ui/button";
 import { Badge } from "@repo/ui/components/ui/badge";
 import {
@@ -20,7 +19,7 @@ interface PageProps {
 
 export default async function JobPostPage({ params }: PageProps) {
   const { id } = await params;
-  const post = await getJobPostById(Number(id));
+  const post = await getJobPostByIdAction(id);
 
   if (!post) {
     notFound();

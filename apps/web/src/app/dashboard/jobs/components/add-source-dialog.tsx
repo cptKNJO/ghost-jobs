@@ -91,7 +91,7 @@ export function AddSourceDialog({
                       name={field.name}
                       defaultValue={field.state.value}
                       aria-invalid={isInvalid}
-                      placeholder="e.g. LinkedIn"
+                      placeholder="e.g. Indeed"
                       autoComplete="off"
                       required
                     />
@@ -116,7 +116,7 @@ export function AddSourceDialog({
                       name={field.name}
                       defaultValue={field.state.value}
                       aria-invalid={isInvalid}
-                      placeholder="https://linkedin.com"
+                      placeholder="https://indeed.com"
                       autoComplete="off"
                       required
                     />

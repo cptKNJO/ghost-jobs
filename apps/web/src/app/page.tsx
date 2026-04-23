@@ -2,6 +2,7 @@ import { Icon } from "@repo/ui/components/ui/icon";
 import { Link } from "@repo/ui/components/ui/link";
 import Image from "next/image";
 import appImage from "./assets/app-image.png";
+import appImageDark from "./assets/app-image-dark.png";
 
 export default function Home() {
   return (
@@ -21,16 +22,24 @@ export default function Home() {
           </p>
           <div className="flex flex-wrap items-center gap-4">
             <Link href="/login">
-              Get Started <Icon name="arrow-right" className="ml-2 h-4 w-4" />
+              Start tracking{" "}
+              <Icon name="arrow-right" className="ml-2 h-4 w-4" />
             </Link>
           </div>
         </div>
-        <div className="relative aspect-video overflow-hidden rounded-xl border bg-muted/50 shadow-2xl">
+        <div className="relative aspect-video overflow-hidden rounded-xl border bg-background shadow-2xl">
           <Image
             src={appImage}
             alt="Job Application Tracker Dashboard"
             placeholder="blur"
-            className="object-cover object-top"
+            className="object-cover object-top dark:hidden"
+            priority
+          />
+          <Image
+            src={appImageDark}
+            alt="Job Application Tracker Dashboard Dark"
+            placeholder="blur"
+            className="object-cover object-top hidden dark:block"
             priority
           />
         </div>

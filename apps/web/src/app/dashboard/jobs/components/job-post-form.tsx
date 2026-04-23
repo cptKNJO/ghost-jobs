@@ -253,6 +253,7 @@ export function JobPostForm({
                       <FieldError errors={field.state.meta.errors} />
                     )}
                     <Select
+                      id={field.name}
                       name={field.name}
                       defaultValue={formattedLookupData?.statuses.find(
                         (s) => s.label === "Applied",

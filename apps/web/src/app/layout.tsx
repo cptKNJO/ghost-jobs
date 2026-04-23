@@ -42,8 +42,8 @@ export default async function RootLayout({
       <body className="flex flex-col min-h-screen bg-background text-foreground font-sans">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <Navbar />

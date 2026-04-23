@@ -25,6 +25,7 @@ import {
   BuildingsIcon,
   InfoIcon,
   DownloadSimpleIcon,
+  GhostIcon,
   IconProps as PhosphorIconProps,
   Icon as PhosphorIcon,
 } from "@phosphor-icons/react";
@@ -54,6 +55,7 @@ export const icons = {
   buildings: BuildingsIcon,
   info: InfoIcon,
   download: DownloadSimpleIcon,
+  ghost: GhostIcon,
 } as const;
 
 export type IconName = keyof typeof icons;

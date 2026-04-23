@@ -2,21 +2,28 @@ import { getUser } from "@/app/lib/dal/auth";
 import { Button } from "@repo/ui/components/ui/button";
 import Link from "next/link";
 import { ModeToggle } from "../mode-toggle";
+import { config } from "../../../config";
+import { Icon } from "@repo/ui/components/ui/icon";
 
 export async function Navbar() {
   const user = await getUser();
 
   return (
     <header className="w-full bg-background border-b border-b-border">
-      <div className="container flex h-16 items-center justify-between mx-auto px-4">
-        <div className="w-full flex items-center gap-6">
+      <div className="container flex sm:h-16 items-center justify-between mx-auto px-4">
+        <div className="w-full flex flex-wrap items-center gap-6 py-4 sm:py-2">
           <Link href="/" className="flex items-center space-x-2">
             <span className="inline-block font-bold text-xl tracking-tight">
-              JobTracker
+              {config.title}
             </span>
+            <div className="flex gap-1 ml-2 text-sm text-muted-foreground">
+              It&apos;s spooky out there
+              <Icon name="ghost" />
+            </div>
           </Link>
 
-          <div className="ml-auto flex items-center gap-4">
+          <div className="-ml-2 sm:ml-auto flex items-center gap-4">
+            <ModeToggle />
             {user ? (
               <>
                 <Link href="/dashboard">
@@ -36,7 +43,6 @@ export async function Navbar() {
                 <Button>Login</Button>
               </Link>
             )}
-            <ModeToggle />
           </div>
         </div>
       </div>

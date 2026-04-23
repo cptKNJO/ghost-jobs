@@ -130,6 +130,47 @@ interface JobPostsTableProps {
 export function JobPostsTable({ data }: JobPostsTableProps) {
   const [actionState, setActionState] = useState<any>(null);
 
+  const handleExportCsv = () => {
+    const headers = [
+      "Role",
+      "Company",
+      "Status",
+      "Date Applied",
+      "Source",
+      "Link",
+    ];
+    const rows = data.map((post) => [
+      post.role,
+      post.company?.name || "",
+      post.status.name,
+      post.appliedOn
+        ? new Date(post.appliedOn).toISOString().split("T")[0]
+        : "",
+      post.source?.name || "",
+      post.linkToPost || "",
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) =>
+        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","),
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `job_applications_${new Date().toISOString().split("T")[0]}.csv`,
+    );
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const columns: ColumnDef<JobPost>[] = [
     {
       accessorKey: "role",
@@ -198,6 +239,12 @@ export function JobPostsTable({ data }: JobPostsTableProps) {
   return (
     <div className="space-y-4">
       <FormAlerts state={actionState} onClear={() => setActionState(null)} />
+      <div className="flex items-center justify-end">
+        <Button variant="outline" size="sm" onClick={handleExportCsv}>
+          <Icon name="download" className="mr-2 size-4" />
+          Export CSV
+        </Button>
+      </div>
       <DataTable columns={columns} data={data} />
     </div>
   );

@@ -48,7 +48,6 @@ export async function getJobPostByIdAction(id: string) {
   const result = idSchema.safeParse(id);
 
   if (!result.success) {
-    console.log(result.error!.issues);
     return { error: result.error!.issues };
   }
 
@@ -198,8 +197,6 @@ export async function editJobPostAction(
       },
     };
   } catch (error) {
-    console.log(error);
-
     if (error instanceof ServerValidateError) {
       return error.formState;
     }

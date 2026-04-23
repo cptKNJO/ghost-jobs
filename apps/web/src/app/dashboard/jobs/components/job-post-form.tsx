@@ -75,7 +75,7 @@ export function JobPostForm({
   const [sourceDialogOpen, setSourceDialogOpen] = useState(false);
 
   const formattedLookupData = formatLookupData(lookupData);
-  console.log(state);
+
   return (
     <>
       <form

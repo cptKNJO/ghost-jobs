@@ -40,6 +40,12 @@ export function AddJobPostDialog({ lookupData }: AddJobPostDialogProps) {
   const form = useForm({
     ...jobFormOpts,
     transform: useTransform((baseForm) => mergeForm(baseForm, state!), [state]),
+    onSubmit: async ({ formApi }) => {
+      if (formApi.state.isValid) {
+        await form.handleSubmit();
+        form.reset();
+      }
+    },
   });
 
   function handleReset() {

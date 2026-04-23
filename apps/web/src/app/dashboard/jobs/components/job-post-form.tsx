@@ -75,13 +75,15 @@ export function JobPostForm({
   const [sourceDialogOpen, setSourceDialogOpen] = useState(false);
 
   const formattedLookupData = formatLookupData(lookupData);
-
+  console.log(state);
   return (
     <>
       <form
         id={id}
         action={action as never}
-        onSubmit={() => form.handleSubmit()}
+        onSubmit={() => {
+          form.handleSubmit();
+        }}
         className="space-y-6 pb-4"
       >
         <FieldGroup>
@@ -152,13 +154,19 @@ export function JobPostForm({
                       name={field.name}
                       items={formattedLookupData.companies}
                       itemToStringValue={(item) => item.value}
-                      defaultValue={formattedLookupData?.companies.find(
-                        (c) => c.value === field.state.value,
-                      )}
+                      value={
+                        formattedLookupData?.companies.find(
+                          (c) => c.value === field.state.value,
+                        ) || null
+                      }
+                      onValueChange={(item) =>
+                        field.handleChange(item?.value ?? "")
+                      }
                     >
                       <ComboboxInput
                         placeholder="Select a company"
                         className="mbs-auto"
+                        showClear
                       />
                       <ComboboxContent>
                         <ComboboxEmpty className="p-0">
@@ -206,13 +214,19 @@ export function JobPostForm({
                       name={field.name}
                       items={formattedLookupData.sources}
                       itemToStringValue={(item) => item.value}
-                      defaultValue={formattedLookupData?.sources.find(
-                        (s) => s.value === field.state.value,
-                      )}
+                      value={
+                        formattedLookupData?.sources.find(
+                          (s) => s.value === field.state.value,
+                        ) || null
+                      }
+                      onValueChange={(item) =>
+                        field.handleChange(item?.value ?? "")
+                      }
                     >
                       <ComboboxInput
                         placeholder="Select a source"
                         className="mbs-auto"
+                        showClear
                       />
                       <ComboboxContent>
                         <ComboboxEmpty className="p-0">

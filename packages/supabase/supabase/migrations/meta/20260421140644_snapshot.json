@@ -53,17 +53,15 @@
         "companies_name_unique": {
           "name": "companies_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.job_post": {
-      "name": "job_post",
+    "public.job_posts": {
+      "name": "job_posts",
       "schema": "",
       "columns": {
         "id": {
@@ -73,7 +71,7 @@
           "notNull": true,
           "identity": {
             "type": "always",
-            "name": "job_post_id_seq",
+            "name": "job_posts_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -149,55 +147,39 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "job_post_company_id_companies_id_fk": {
-          "name": "job_post_company_id_companies_id_fk",
-          "tableFrom": "job_post",
+        "job_posts_company_id_companies_id_fk": {
+          "name": "job_posts_company_id_companies_id_fk",
+          "tableFrom": "job_posts",
           "tableTo": "companies",
-          "columnsFrom": [
-            "company_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["company_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "job_post_source_id_sources_id_fk": {
-          "name": "job_post_source_id_sources_id_fk",
-          "tableFrom": "job_post",
+        "job_posts_source_id_sources_id_fk": {
+          "name": "job_posts_source_id_sources_id_fk",
+          "tableFrom": "job_posts",
           "tableTo": "sources",
-          "columnsFrom": [
-            "source_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["source_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "job_post_status_id_statuses_id_fk": {
-          "name": "job_post_status_id_statuses_id_fk",
-          "tableFrom": "job_post",
+        "job_posts_status_id_statuses_id_fk": {
+          "name": "job_posts_status_id_statuses_id_fk",
+          "tableFrom": "job_posts",
           "tableTo": "statuses",
-          "columnsFrom": [
-            "status_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["status_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "job_post_profile_id_profiles_id_fk": {
-          "name": "job_post_profile_id_profiles_id_fk",
-          "tableFrom": "job_post",
+        "job_posts_profile_id_profiles_id_fk": {
+          "name": "job_posts_profile_id_profiles_id_fk",
+          "tableFrom": "job_posts",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -263,12 +245,8 @@
           "tableFrom": "profiles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -278,16 +256,12 @@
         "profiles_user_id_unique": {
           "name": "profiles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         },
         "profiles_display_name_unique": {
           "name": "profiles_display_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "display_name"
-          ]
+          "columns": ["display_name"]
         }
       },
       "policies": {},
@@ -343,9 +317,7 @@
         "skills_name_unique": {
           "name": "skills_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
@@ -407,9 +379,7 @@
         "sources_url_unique": {
           "name": "sources_url_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "url"
-          ]
+          "columns": ["url"]
         }
       },
       "policies": {},
@@ -471,9 +441,7 @@
         "statuses_code_unique": {
           "name": "statuses_code_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "code"
-          ]
+          "columns": ["code"]
         }
       },
       "policies": {},

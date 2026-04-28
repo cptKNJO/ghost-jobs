@@ -2,7 +2,7 @@ import { getUser } from "@/app/lib/dal/auth";
 import { Button } from "@repo/ui/components/ui/button";
 import Link from "next/link";
 import { ModeToggle } from "../mode-toggle";
-import { config } from "../../../config";
+import { config } from "@/config";
 import { Icon } from "@repo/ui/components/ui/icon";
 
 export async function Navbar() {
@@ -20,6 +20,13 @@ export async function Navbar() {
               It&apos;s spooky out there
               <Icon name="ghost" />
             </div>
+          </Link>
+
+          <Link
+            href="/pricing"
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
+            Pricing
           </Link>
 
           <div className="-ml-2 sm:ml-auto flex items-center gap-4">

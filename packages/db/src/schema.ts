@@ -1,6 +1,8 @@
 import { relations } from "drizzle-orm";
 import {
+  boolean,
   integer,
+  jsonb,
   pgSchema,
   pgTable,
   text,
@@ -62,11 +64,6 @@ export const profiles = pgTable("profiles", {
     .unique(),
   ...timestamps,
 });
-
-export const profileRelations = relations(profiles, ({ many }) => ({
-  jobPosts: many(jobPosts),
-}));
-
 export const jobPosts = pgTable("job_posts", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   // FKs
@@ -111,6 +108,67 @@ export const jobPostsRelations = relations(jobPosts, ({ one }) => ({
   profile: one(profiles, {
     fields: [jobPosts.profileId],
     references: [profiles.id],
+  }),
+}));
+
+// 'free', 'human', 'robot'
+export const pricingPlans = pgTable("pricing_plans", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 20 }).notNull().unique(),
+  features: jsonb("features").default([]),
+  interval: text("interval").default("month").notNull(),
+  currency: text("currency").default("usd").notNull(),
+  amount: integer("amount").notNull(),
+  // check against usageCount to prevent surprise bills
+  hardLimit: integer("hard_limit").notNull(),
+  // provider
+  billingProvider: text("billing_provider").default("stripe").notNull(),
+  providerPriceId: text("provider_price_id").notNull(),
+  ...timestamps,
+});
+
+export const subscriptions = pgTable("subscriptions", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  profileId: integer("profile_id")
+    .notNull()
+    .unique()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  planId: integer("plan_id")
+    .notNull()
+    .references(() => pricingPlans.id),
+
+  // Provider-specific data stored
+  externalCustomerId: text("external_customer_id").unique(),
+  externalSubscriptionId: text("external_subscription_id").unique(),
+
+  status: varchar("status", { length: 50 }).notNull(),
+  usageCount: integer("usage_count").default(0),
+  // Unsure if we will need this
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
+
+  trialStart: timestamp("trial_start"),
+  trialEnd: timestamp("trial_end"),
+  currentPeriodStart: timestamp("current_period_start", { withTimezone: true }),
+  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+  ...timestamps,
+});
+
+export const profileRelations = relations(profiles, ({ many, one }) => ({
+  jobPosts: many(jobPosts),
+  subscription: one(subscriptions, {
+    fields: [profiles.id],
+    references: [subscriptions.profileId],
+  }),
+}));
+
+export const subscriptionRelations = relations(subscriptions, ({ one }) => ({
+  profile: one(profiles, {
+    fields: [subscriptions.profileId],
+    references: [profiles.id],
+  }),
+  plan: one(pricingPlans, {
+    fields: [subscriptions.planId],
+    references: [pricingPlans.id],
   }),
 }));
 

@@ -40,7 +40,7 @@ export default function PricingPage() {
       price: "$5",
       description: "For the high-volume power user",
       features: [
-        "1,000 jobs per month included",
+        "500 jobs per month included",
         "$0.01 per additional job",
         'Special "I am robot" label',
         "7-day free trial",

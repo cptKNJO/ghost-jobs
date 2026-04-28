@@ -123,7 +123,8 @@ export const pricingPlans = pgTable("pricing_plans", {
   hardLimit: integer("hard_limit").notNull(),
   // provider
   billingProvider: text("billing_provider").default("stripe").notNull(),
-  providerPriceId: text("provider_price_id").notNull(),
+  providerPriceBaseId: text("provider_price_base_id"),
+  providerPriceMeteredId: text("provider_price_metered_id"),
   ...timestamps,
 });
 

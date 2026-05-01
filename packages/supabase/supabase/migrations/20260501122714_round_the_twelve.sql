@@ -1,0 +1,2 @@
+ALTER TABLE "subscriptions" ADD COLUMN "external_price_item_id" text;--> statement-breakpoint
+ALTER TABLE "subscriptions" ADD CONSTRAINT "subscriptions_external_price_item_id_unique" UNIQUE("external_price_item_id");

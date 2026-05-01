@@ -141,6 +141,8 @@ export const subscriptions = pgTable("subscriptions", {
   // Provider-specific data stored
   externalCustomerId: text("external_customer_id").unique(),
   externalSubscriptionId: text("external_subscription_id").unique(),
+  // Required for reporting user's usage for metered item
+  externalPriceItemId: text("external_price_item_id").unique(),
 
   status: varchar("status", { length: 50 }).notNull(),
   usageCount: integer("usage_count").default(0),
@@ -175,7 +177,11 @@ export const subscriptionRelations = relations(subscriptions, ({ one }) => ({
 
 // Schemas for validators
 export const insertjobPostsSchema = createInsertSchema(jobPosts);
+export const insertSubscriptionSchema = createInsertSchema(subscriptions);
 // Types
 export type Status = InferSelectModel<typeof statuses>;
 export type Company = InferSelectModel<typeof companies>;
 export type Source = InferSelectModel<typeof sources>;
+export type PricingPlan = InferSelectModel<typeof pricingPlans>;
+export type Subscription = InferSelectModel<typeof subscriptions>;
+export type NewSubscription = InferInsertModel<typeof subscriptions>;

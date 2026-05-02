@@ -62,6 +62,8 @@ export const profiles = pgTable("profiles", {
   })
     .notNull()
     .unique(),
+  // Payment provider (stripe) customer id
+  externalCustomerId: text("external_customer_id").unique(),
   ...timestamps,
 });
 export const jobPosts = pgTable("job_posts", {
@@ -132,14 +134,12 @@ export const subscriptions = pgTable("subscriptions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   profileId: integer("profile_id")
     .notNull()
-    .unique()
     .references(() => profiles.id, { onDelete: "cascade" }),
   planId: integer("plan_id")
     .notNull()
     .references(() => pricingPlans.id),
 
   // Provider-specific data stored
-  externalCustomerId: text("external_customer_id").unique(),
   externalSubscriptionId: text("external_subscription_id").unique(),
   // Required for reporting user's usage for metered item
   externalPriceItemId: text("external_price_item_id").unique(),

@@ -44,6 +44,12 @@ export async function createCheckoutAction(formData: FormData) {
   try {
     const { id, externalCustomerId, email } = profile;
 
+    const exists = await billing.checkIfAlreadyExists(profile.id);
+
+    if (exists) {
+      redirect(exists);
+    }
+
     const checkoutUrl = await billing.checkout(
       {
         id,

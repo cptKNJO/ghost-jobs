@@ -46,4 +46,8 @@ export const billing = {
   ) => {
     return provider.reportUsage(profileId, customerId, incrementBy);
   },
+
+  checkIfAlreadyExists: async (profileId: number) => {
+    return provider.checkIfAlreadySubscribed(profileId);
+  },
 };

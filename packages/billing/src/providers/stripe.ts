@@ -223,4 +223,38 @@ export class StripeProvider {
       throw error;
     }
   }
+
+  /**
+   * check if user susbscription already exists
+   */
+  async checkIfAlreadySubscribed(profileId: number) {
+    // 1. Check for existing active/trialing subscription
+    const existingSub = await db.query.subscriptions.findFirst({
+      where: (subs, { and, eq, or }) =>
+        and(
+          eq(subs.profileId, profileId),
+          or(eq(subs.status, "active"), eq(subs.status, "trialing")),
+        ),
+    });
+
+    // 2. If they have one, don't let them buy another
+    if (existingSub) {
+      // Optional: Fetch the Customer ID to send them to the Billing Portal
+      const profile = await db.query.profiles.findFirst({
+        where: (p, { eq }) => eq(p.id, profileId),
+      });
+
+      if (profile?.externalCustomerId) {
+        const portalSession = await this.stripe.billingPortal.sessions.create({
+          customer: profile.externalCustomerId,
+          return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`,
+        });
+        return portalSession.url;
+      }
+
+      throw new Error("You already have an active subscription.");
+    }
+    // TODO: Move as not happy path
+    return null;
+  }
 }

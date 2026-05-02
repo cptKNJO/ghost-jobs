@@ -3,7 +3,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "env": ["DATABASE_URL"],
+      "env": ["DATABASE_URL", "STRIPE_SECRET_KEY"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { db, eq } from "@repo/db";
+import { db, desc, eq } from "@repo/db";
 import {
   pricingPlans,
   subscriptions,
@@ -77,9 +77,14 @@ export async function getSubscription() {
 
   try {
     const subscription = await db.query.subscriptions.findFirst({
-      where: eq(subscriptions.profileId, profile.id),
-      columns: {
-        usageCount: true,
+      where: (subs, { eq, and, inArray }) =>
+        and(
+          eq(subs.profileId, profile.id),
+          inArray(subs.status, ["active", "trialing"]),
+        ),
+      orderBy: [desc(subscriptions.createdAt)],
+      with: {
+        plan: true,
       },
     });
 

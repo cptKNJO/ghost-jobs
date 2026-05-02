@@ -33,29 +33,6 @@ export async function getProfile() {
   }
 }
 
-export async function getProfileWithSubscription() {
-  const user = await getUser();
-  if (!user) return null;
-
-  try {
-    const profile = await db.query.profiles.findFirst({
-      where: eq(profiles.userId, user.id),
-      with: {
-        subscription: {
-          with: {
-            plan: true,
-          },
-        },
-      },
-    });
-
-    return profile ?? null;
-  } catch (error) {
-    console.error("Error fetching profile with subscription:", error);
-    return null;
-  }
-}
-
 export async function updateProfile(data: ProfileSchema) {
   const user = await getUser();
   if (!user) return null;

@@ -2,11 +2,11 @@ import "server-only";
 
 import { db, eq, and } from "@repo/db";
 import { companies, jobPosts, sources } from "@repo/db/schema";
+import { getProfile } from "../../profile/data/profile";
 import {
-  getProfile,
-  getProfileWithSubscription,
-} from "../../profile/data/profile";
-import { getPricingPlanByName } from "../../../pricing/data/pricing";
+  getPricingPlanByName,
+  getSubscription,
+} from "../../../pricing/data/pricing";
 import { billing } from "@repo/billing";
 import {
   companySchema,
@@ -69,11 +69,13 @@ export async function createSource(data: SourceSchema) {
 }
 
 export async function createJobPost(post: JobPost) {
-  const profile = await getProfileWithSubscription();
+  const profile = await getProfile();
   if (!profile || "error" in profile) return [];
 
-  const usageCount = profile.subscription?.usageCount ?? 0;
-  let hardLimit = profile.subscription?.plan?.hardLimit;
+  const subscription = await getSubscription();
+
+  const usageCount = subscription?.usageCount ?? 0;
+  let hardLimit = subscription?.plan?.hardLimit;
 
   if (hardLimit === undefined) {
     const freePlan = await getPricingPlanByName("free");

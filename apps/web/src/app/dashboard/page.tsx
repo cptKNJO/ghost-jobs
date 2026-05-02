@@ -1,14 +1,12 @@
 import { redirect } from "next/navigation";
 import { Icon } from "@repo/ui/components/ui/icon";
 import { getUser } from "@/app/lib/dal/auth";
-import {
-  getProfileAction,
-  getProfileWithSubscriptionAction,
-} from "./profile/actions";
+import { getProfileAction } from "./profile/actions";
 import { getJobPostsAction, getLookupDataAction } from "./jobs/actions";
 import { JobPostsTable } from "./jobs/components/job-posts-table";
 import { AddJobPostDialog } from "./jobs/components/add-job-post-dialog";
 import { CustomerBadge } from "@/components/shared/customer-badge";
+import { getSubscription } from "../pricing/data/pricing";
 
 export default async function Dashboard() {
   const user = await getUser();
@@ -17,16 +15,13 @@ export default async function Dashboard() {
     redirect("/login");
   }
 
-  const [profile, jobPosts, lookupData] = await Promise.all([
-    getProfileWithSubscriptionAction(),
+  const [profile, jobPosts, lookupData, subscription] = await Promise.all([
+    getProfileAction(),
     getJobPostsAction(),
     getLookupDataAction(),
   ]);
 
-  const planName = profile?.subscription?.plan?.name as
-    | "human"
-    | "robot"
-    | undefined;
+  const planName = subscription?.plan?.name as "human" | "robot" | undefined;
   const showLabel = planName === "human" || planName === "robot";
 
   return (

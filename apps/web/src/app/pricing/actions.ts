@@ -8,6 +8,7 @@ import {
   getPricingPlanById,
   getPricingPlans,
   createSubscription,
+  getSubscription,
 } from "./data/pricing";
 import { revalidatePath } from "next/cache";
 
@@ -82,4 +83,8 @@ export async function getPlanByIdAction(id: string) {
 
 export async function getPricingPlansAction() {
   return await getPricingPlans();
+}
+
+export async function getSubscriptionAction() {
+  return await getSubscription();
 }

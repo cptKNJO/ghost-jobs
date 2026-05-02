@@ -9,20 +9,25 @@ import {
 } from "@repo/ui/components/ui/card";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Icon } from "@repo/ui/components/ui/icon";
-import { createCheckoutAction, getPricingPlansAction } from "./actions";
-import { getProfileWithSubscriptionAction } from "../dashboard/profile/actions";
+import {
+  createCheckoutAction,
+  getPricingPlansAction,
+  getSubscriptionAction,
+} from "./actions";
 import { CustomerBadge } from "@/components/shared/customer-badge";
 
 export default async function PricingPage() {
   const plans = await getPricingPlansAction();
-  const profile = await getProfileWithSubscriptionAction();
-  const currentPlanId = profile?.subscription?.planId;
+  const subscription = await getSubscriptionAction();
+  const currentPlanId = subscription?.planId;
 
   const { free, human, robot } = {
     free: plans.find((n) => n.name === "free"),
     human: plans.find((n) => n.name === "human"),
     robot: plans.find((n) => n.name === "robot"),
   };
+
+  const isHuman = subscription?.plan?.name === "human";
 
   const tiers = [
     {
@@ -45,7 +50,7 @@ export default async function PricingPage() {
       price: getPrice(robot?.amount),
       description: "For the high-volume power user",
       badge: "I am robot",
-      buttonText: "Start Trial",
+      buttonText: isHuman ? "Change Plans" : "Start Trial",
       buttonVariant: "default" as const,
     },
   ];
@@ -106,7 +111,14 @@ export default async function PricingPage() {
                   Your Current Plan
                 </div>
               ) : (
-                <form action={createCheckoutAction} className="w-full">
+                <form
+                  action={
+                    isHuman && tier.name === "robot"
+                      ? upgradePlanAction
+                      : createCheckoutAction
+                  }
+                  className="w-full"
+                >
                   <input type="hidden" name="planId" value={tier.id} />
                   <Button
                     type="submit"

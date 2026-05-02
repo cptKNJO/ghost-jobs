@@ -109,7 +109,7 @@ export default async function PricingPage() {
                   Your Current Plan
                 </div>
               ) : (
-                <form action={createCheckoutAction}>
+                <form action={createCheckoutAction} className="w-full">
                   <input type="hidden" name="planId" value={tier.id} />
                   <Button
                     type="submit"

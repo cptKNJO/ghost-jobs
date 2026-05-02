@@ -13,6 +13,10 @@ export const billing = {
     });
   },
 
+  upgrade: async (profileId: number, newPriceId: string) => {
+    return provider.upgradeToRobot(profileId, newPriceId);
+  },
+
   verifyAndSync: async (sessionId: string, expectedProfileId: number) => {
     const session = await provider.getSession(sessionId);
 
@@ -49,5 +53,9 @@ export const billing = {
 
   checkIfAlreadyExists: async (profileId: number) => {
     return provider.checkIfAlreadySubscribed(profileId);
+  },
+
+  handleWebhook: async (payload: string, signature: string) => {
+    return provider.handleWebhook(payload, signature);
   },
 };

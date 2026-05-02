@@ -7,12 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/ui/card";
-import { Badge } from "@repo/ui/components/ui/badge";
 import { Icon } from "@repo/ui/components/ui/icon";
 import {
   createCheckoutAction,
   getPricingPlansAction,
   getSubscriptionAction,
+  upgradePlanAction,
 } from "./actions";
 import { CustomerBadge } from "@/components/shared/customer-badge";
 
@@ -28,6 +28,7 @@ export default async function PricingPage() {
   };
 
   const isHuman = subscription?.plan?.name === "human";
+  const isRobot = subscription?.plan?.name === "robot";
 
   const tiers = [
     {
@@ -42,7 +43,7 @@ export default async function PricingPage() {
       price: getPrice(human?.amount),
       description: "For the dedicated job seeker",
       badge: "I am human",
-      buttonText: "Start Trial",
+      buttonText: isRobot ? "Change Plans" : "Start Trial",
       buttonVariant: "default" as const,
     },
     {
@@ -113,7 +114,7 @@ export default async function PricingPage() {
               ) : (
                 <form
                   action={
-                    isHuman && tier.name === "robot"
+                    subscription?.plan.name !== "free"
                       ? upgradePlanAction
                       : createCheckoutAction
                   }

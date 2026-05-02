@@ -5,7 +5,7 @@ import {
   ProfileWithEmail,
   type PricingPlan,
 } from "@repo/db/schema";
-import { db, eq, sql } from "@repo/db";
+import { and, db, desc, eq, inArray, isNull, sql } from "@repo/db";
 import { subscriptions } from "@repo/db/schema";
 
 const STRIPE = {
@@ -115,10 +115,19 @@ export class StripeProvider {
       return await db.transaction(async (tx) => {
         // Step A: Update Profile
         // We do this first to ensure the FK constraint in step B is satisfied
-        await tx
+        const result = await tx
           .update(profiles)
           .set({ externalCustomerId: stripeSubscription.customer as string })
-          .where(eq(profiles.id, profileId));
+          .where(
+            and(
+              eq(profiles.id, profileId),
+              isNull(profiles.externalCustomerId),
+            ),
+          );
+
+        if (result.length > 0) {
+          console.log("Customer ID linked for the first time.");
+        }
 
         // Calculate the reset logic in JavaScript
         // We fetch the existing subscription first to compare dates
@@ -159,16 +168,22 @@ export class StripeProvider {
           usageCount: shouldResetUsage ? 0 : (existingSub?.usageCount ?? 0),
         };
 
+        console.log(stripeSubscription);
+        console.log(subValues);
+
+        const { externalSubscriptionId, ...settableValues } = subValues;
+
         // Step B: Upsert Subscription
         // Using a 'conflict' check is often cleaner in Postgres/Supabase
         await tx.insert(subscriptions).values(subValues).onConflictDoUpdate({
           target: subscriptions.externalSubscriptionId,
-          set: subValues,
+          set: settableValues,
         });
 
         return { success: true };
       });
     } catch (error) {
+      console.log(error.cause);
       console.error("Billing Sync Failed. Transaction Rolled Back.", error);
       throw error;
     }
@@ -227,6 +242,7 @@ export class StripeProvider {
   /**
    * check if user susbscription already exists
    */
+  // TODO: Should we remove this - not using the existingSub path
   async checkIfAlreadySubscribed(profileId: number) {
     // 1. Check for existing active/trialing subscription
     const existingSub = await db.query.subscriptions.findFirst({
@@ -256,5 +272,125 @@ export class StripeProvider {
     }
     // TODO: Move as not happy path
     return null;
+  }
+
+  async handleWebhook(payload: string, signature: string) {
+    let event: Stripe.Event;
+
+    try {
+      event = this.stripe.webhooks.constructEvent(
+        payload,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET!,
+      );
+      console.log("hooked", event.type);
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err);
+      throw new Error("Webhook signature verification failed");
+    }
+
+    switch (event.type) {
+      case "customer.subscription.created":
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+
+        // Retrieve profile from customerId
+        const profile = await db.query.profiles.findFirst({
+          where: eq(
+            profiles.externalCustomerId,
+            subscription.customer as string,
+          ),
+        });
+
+        // Sync subscriptions
+        if (profile?.id) {
+          await this.syncSubscription(subscription, profile.id);
+        }
+        break;
+      }
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object as Stripe.Subscription;
+
+        const plan = await db.query.pricingPlans.findFirst({
+          where: eq(pricingPlans.name, "free"),
+        });
+
+        await db
+          .update(subscriptions)
+          .set({
+            status: "canceled",
+            cancelAtPeriodEnd: false,
+            planId: plan!.id, // set to free tier
+          })
+          .where(eq(subscriptions.externalSubscriptionId, subscription.id));
+        break;
+      }
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+
+    return { received: true };
+  }
+
+  async upgradeToRobot(profileId: number, newPlanId: string) {
+    // 1. Get the LATEST active or trialing subscription
+    const sub = await db.query.subscriptions.findFirst({
+      where: and(
+        eq(subscriptions.profileId, profileId),
+        inArray(subscriptions.status, ["active", "trialing"]),
+      ),
+      orderBy: [desc(subscriptions.createdAt)],
+    });
+
+    if (!sub || !sub.externalSubscriptionId) {
+      throw new Error("No active subscription found to upgrade.");
+    }
+
+    // 3. Fetch full subscription from Stripe to get current Item IDs
+    const stripSub = await this.stripe.subscriptions.retrieve(
+      sub.externalSubscriptionId,
+      {
+        expand: ["items.data.price"],
+      },
+    );
+
+    const plan = await db.query.pricingPlans.findFirst({
+      where: eq(pricingPlans.id, +newPlanId),
+    });
+
+    // Build items array for update
+    const itemsToUpdate = stripSub.items.data.map((item) => {
+      const price = item.price;
+      let newPriceId = plan?.providerPriceBaseId; // set default to base flat fee id
+
+      // Determine item type
+      if (price.recurring?.usage_type === "metered") {
+        newPriceId = plan?.providerPriceMeteredId;
+      }
+
+      return {
+        id: item.id,
+        price: newPriceId,
+        ...(price.billing_scheme === "tiered" && {
+          // For tiered items, you might want to preserve quantity
+          quantity: item.quantity,
+        }),
+      };
+    });
+
+    // 4. Update the subscription by swapping specific items
+    // We use the 'price.id' to identify which item is the flat fee vs metered fee
+    const updated = await this.stripe.subscriptions.update(
+      sub.externalSubscriptionId,
+      {
+        items: itemsToUpdate,
+        proration_behavior: "always_invoice",
+      },
+    );
+
+    // Sync immediately
+    await this.syncSubscription(updated, profileId);
+
+    return { success: true };
   }
 }

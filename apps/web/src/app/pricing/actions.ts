@@ -24,6 +24,33 @@ export async function createSubscriptionAction(data: any) {
   }
 }
 
+export async function upgradePlanAction(formData: FormData) {
+  const profile = await getProfileAction();
+
+  if (!profile || "error" in profile) {
+    redirect("/login");
+  }
+
+  const planId = formData.get("planId") as string;
+  const plan = await getPlanByIdAction(planId);
+  if (!plan) {
+    throw new Error("Plan not found");
+  }
+
+  try {
+    await billing.upgrade(profile.id, planId);
+    // await billing.syncSubscription(, profile.id);
+  } catch (error) {
+    console.error("Upgrade error:", error);
+    throw new Error("Failed to upgrade plan");
+  }
+
+  // redirect(url);
+  // revalidatePath("/pricing");
+  // revalidatePath("/dashboard");
+  redirect("/dashboard");
+}
+
 export async function createCheckoutAction(formData: FormData) {
   const profile = await getProfileAction();
 
@@ -44,12 +71,6 @@ export async function createCheckoutAction(formData: FormData) {
 
   try {
     const { id, externalCustomerId, email } = profile;
-
-    const exists = await billing.checkIfAlreadyExists(profile.id);
-
-    if (exists) {
-      redirect(exists);
-    }
 
     const checkoutUrl = await billing.checkout(
       {

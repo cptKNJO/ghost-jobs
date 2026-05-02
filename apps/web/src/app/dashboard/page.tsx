@@ -19,6 +19,7 @@ export default async function Dashboard() {
     getProfileAction(),
     getJobPostsAction(),
     getLookupDataAction(),
+    getSubscription(),
   ]);
 
   const planName = subscription?.plan?.name as "human" | "robot" | undefined;

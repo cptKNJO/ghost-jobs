@@ -1,7 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getProfile, updateProfile } from "./data/profile";
+import {
+  getProfile,
+  updateProfile,
+  getProfileWithSubscription,
+} from "./data/profile";
 import {
   createServerValidate,
   formOptions,
@@ -16,6 +20,10 @@ const serverValidateProfile = createServerValidate({
 
 export async function getProfileAction() {
   return await getProfile();
+}
+
+export async function getProfileWithSubscriptionAction() {
+  return await getProfileWithSubscription();
 }
 
 export async function updateProfileAction(

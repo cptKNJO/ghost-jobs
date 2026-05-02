@@ -9,47 +9,55 @@ import {
 } from "@repo/ui/components/ui/card";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Icon } from "@repo/ui/components/ui/icon";
-import Link from "next/link";
+import { createCheckoutAction, getPricingPlansAction } from "./actions";
+import { getProfileWithSubscriptionAction } from "../dashboard/profile/actions";
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const plans = await getPricingPlansAction();
+  const profile = await getProfileWithSubscriptionAction();
+  const currentPlanId = profile?.subscription?.planId;
+
+  const { free, human, robot } = {
+    free: plans.find((n) => n.name === "free"),
+    human: plans.find((n) => n.name === "human"),
+    robot: plans.find((n) => n.name === "robot"),
+  };
+
   const tiers = [
     {
-      name: "Free",
-      price: "$0",
+      ...free,
+      price: getPrice(free?.amount),
       description: "Perfect for getting started",
-      features: ["Infinite jobs per month", "Basic job tracking"],
       buttonText: "Get Started",
       buttonVariant: "outline" as const,
     },
     {
-      name: "Human",
-      price: "$2",
+      ...human,
+      price: getPrice(human?.amount),
       description: "For the dedicated job seeker",
-      features: [
-        "100 jobs per month included",
-        "$0.01 per additional job",
-        'Special "I am human" label',
-        "7-day free trial",
-      ],
       badge: "I am human",
       buttonText: "Start Trial",
       buttonVariant: "default" as const,
     },
     {
-      name: "Robot",
-      price: "$5",
+      ...robot,
+      price: getPrice(robot?.amount),
       description: "For the high-volume power user",
-      features: [
-        "500 jobs per month included",
-        "$0.01 per additional job",
-        'Special "I am robot" label',
-        "7-day free trial",
-      ],
       badge: "I am robot",
       buttonText: "Start Trial",
       buttonVariant: "default" as const,
     },
   ];
+
+  // const handleCheckout = async (planName: string) => {
+  //   // setLoading(planName);
+  //   try {
+  //     await createCheckoutAction(planName);
+  //   } catch (error) {
+  //     console.error(error);
+  //     // setLoading(null);
+  //   }
+  // };
 
   return (
     <div className="container mx-auto py-12 px-4">
@@ -64,7 +72,7 @@ export default function PricingPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {tiers.map((tier) => (
-          <Card key={tier.name} className="flex flex-col">
+          <Card key={tier.id} className="flex flex-col">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="text-2xl">{tier.name}</CardTitle>
@@ -75,7 +83,7 @@ export default function PricingPage() {
                 )}
               </div>
               <div className="mt-4 flex items-baseline">
-                <span className="text-4xl font-bold">{tier.price}</span>
+                <span className="text-4xl font-bold">${tier.price}</span>
                 <span className="ml-1 text-muted-foreground">/month</span>
               </div>
               <CardDescription className="mt-2">
@@ -96,13 +104,34 @@ export default function PricingPage() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button className="w-full" variant={tier.buttonVariant} asChild>
-                <Link href="/login">{tier.buttonText}</Link>
-              </Button>
+              {currentPlanId === tier.id ? (
+                <div className="w-full text-center py-2 font-semibold text-primary">
+                  Your Current Plan
+                </div>
+              ) : (
+                <form action={createCheckoutAction}>
+                  <input type="hidden" name="planId" value={tier.id} />
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    variant={tier.buttonVariant}
+                  >
+                    {tier.buttonText}
+                  </Button>
+                </form>
+              )}
             </CardFooter>
           </Card>
         ))}
       </div>
     </div>
   );
+}
+
+function getPrice(amountInCents?: number) {
+  if (!amountInCents) {
+    return 0;
+  }
+
+  return amountInCents / 100;
 }

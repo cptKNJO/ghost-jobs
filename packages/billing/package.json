@@ -1,0 +1,16 @@
+{
+  "name": "@repo/billing",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.33.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "stripe": "^17.4.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@repo/db": "workspace:*",
+    "typescript": "^5.6.3"
+  }
+}

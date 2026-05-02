@@ -185,3 +185,7 @@ export type Source = InferSelectModel<typeof sources>;
 export type PricingPlan = InferSelectModel<typeof pricingPlans>;
 export type Subscription = InferSelectModel<typeof subscriptions>;
 export type NewSubscription = InferInsertModel<typeof subscriptions>;
+export type Profile = InferSelectModel<typeof profiles>;
+export type ProfileWithEmail = Pick<Profile, "id" | "externalCustomerId"> & {
+  email: string;
+};

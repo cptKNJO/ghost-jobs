@@ -20,6 +20,18 @@ export async function getPricingPlanById(id: number) {
   }
 }
 
+export async function getPricingPlanByName(name: string) {
+  try {
+    const plan = await db.query.pricingPlans.findFirst({
+      where: eq(pricingPlans.name, name),
+    });
+    return plan ?? null;
+  } catch (error) {
+    console.error("Error fetching pricing plan by name:", error);
+    return null;
+  }
+}
+
 export async function createSubscription(
   data: Omit<NewSubscription, "profileId">,
 ) {
@@ -49,12 +61,31 @@ export async function createSubscription(
 export async function getPricingPlans() {
   try {
     const plans = await db.query.pricingPlans.findMany({
-      orderBy: (companies, { asc }) => [asc(companies.amount)],
+      orderBy: (plans, { asc }) => [asc(plans.amount)],
     });
 
     return plans;
   } catch (error) {
-    console.error("Error fetching job posts:", error);
+    console.error("Error fetching pricing plans:", error);
     return [];
+  }
+}
+
+export async function getSubscription() {
+  const profile = await getProfile();
+  if (!profile || "error" in profile) return null;
+
+  try {
+    const subscription = await db.query.subscriptions.findFirst({
+      where: eq(subscriptions.profileId, profile.id),
+      columns: {
+        usageCount: true,
+      },
+    });
+
+    return subscription ?? null;
+  } catch (error) {
+    console.error("Error fetching subscription:", error);
+    return null;
   }
 }

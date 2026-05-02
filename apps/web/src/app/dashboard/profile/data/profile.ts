@@ -41,7 +41,11 @@ export async function getProfileWithSubscription() {
     const profile = await db.query.profiles.findFirst({
       where: eq(profiles.userId, user.id),
       with: {
-        subscription: true,
+        subscription: {
+          with: {
+            plan: true,
+          },
+        },
       },
     });
 

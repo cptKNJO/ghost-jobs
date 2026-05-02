@@ -1,10 +1,14 @@
 import { redirect } from "next/navigation";
 import { Icon } from "@repo/ui/components/ui/icon";
 import { getUser } from "@/app/lib/dal/auth";
-import { getProfileAction } from "./profile/actions";
+import {
+  getProfileAction,
+  getProfileWithSubscriptionAction,
+} from "./profile/actions";
 import { getJobPostsAction, getLookupDataAction } from "./jobs/actions";
 import { JobPostsTable } from "./jobs/components/job-posts-table";
 import { AddJobPostDialog } from "./jobs/components/add-job-post-dialog";
+import { CustomerBadge } from "@/components/shared/customer-badge";
 
 export default async function Dashboard() {
   const user = await getUser();
@@ -14,19 +18,28 @@ export default async function Dashboard() {
   }
 
   const [profile, jobPosts, lookupData] = await Promise.all([
-    getProfileAction(),
+    getProfileWithSubscriptionAction(),
     getJobPostsAction(),
     getLookupDataAction(),
   ]);
+
+  const planName = profile?.subscription?.plan?.name as
+    | "human"
+    | "robot"
+    | undefined;
+  const showLabel = planName === "human" || planName === "robot";
 
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">My Applications</h1>
-          <p className="text-muted-foreground">
-            Welcome back, {profile?.displayName}!
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-muted-foreground">
+              Welcome back, {profile?.displayName}!
+            </p>
+            {showLabel && <CustomerBadge plan={planName} />}
+          </div>
         </div>
         <div className="flex gap-2">
           <AddJobPostDialog lookupData={lookupData} />

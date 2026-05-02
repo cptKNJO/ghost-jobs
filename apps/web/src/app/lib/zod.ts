@@ -47,6 +47,9 @@ export const idFromFormSchema = z
   .transform((s) => (s === "" ? null : Number(s)))
   .pipe(z.union([z.null(), z.number()]));
 
+/**
+ * Ensure string is a character and not an empty space
+ */
 export const requiredTextSchema = (error = "Enter the required information") =>
   z
     .string()

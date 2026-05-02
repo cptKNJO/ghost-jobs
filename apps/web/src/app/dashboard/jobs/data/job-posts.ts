@@ -2,7 +2,12 @@ import "server-only";
 
 import { db, eq, and } from "@repo/db";
 import { companies, jobPosts, sources } from "@repo/db/schema";
-import { getProfile } from "../../profile/data/profile";
+import {
+  getProfile,
+  getProfileWithSubscription,
+} from "../../profile/data/profile";
+import { getPricingPlanByName } from "../../../pricing/data/pricing";
+import { billing } from "@repo/billing";
 import {
   companySchema,
   jobPostSchema,
@@ -64,13 +69,30 @@ export async function createSource(data: SourceSchema) {
 }
 
 export async function createJobPost(post: JobPost) {
-  const profile = await getProfile();
-  if (!profile) return [];
+  const profile = await getProfileWithSubscription();
+  if (!profile || "error" in profile) return [];
+
+  const usageCount = profile.subscription?.usageCount ?? 0;
+  let hardLimit = profile.subscription?.plan?.hardLimit;
+
+  if (hardLimit === undefined) {
+    const freePlan = await getPricingPlanByName("free");
+    hardLimit = freePlan?.hardLimit ?? 50;
+  }
+
+  if (usageCount >= hardLimit) {
+    throw Error("Usage limit reached. Please upgrade your plan.");
+  }
 
   const formattedPost = cleanPost(post, profile.id);
 
   try {
     const insertedJobPost = await db.insert(jobPosts).values(formattedPost);
+
+    // Report billing usage if relevant
+    if (profile.externalCustomerId) {
+      await billing.reportUsage(profile.id, profile.externalCustomerId);
+    }
 
     return insertedJobPost;
   } catch (error) {

@@ -164,6 +164,16 @@ export async function createJobPostAction(
       return error.formState;
     }
 
+    if (
+      error instanceof Error &&
+      error.message.includes("Usage limit reached")
+    ) {
+      return {
+        error: true,
+        message: error.message,
+      };
+    }
+
     return {
       error: true,
       message: "Failed to save the form, try again later.",

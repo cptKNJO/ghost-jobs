@@ -5,8 +5,14 @@ import {
   ProfileWithEmail,
   type PricingPlan,
 } from "@repo/db/schema";
-import { db, eq } from "@repo/db";
+import { db, eq, sql } from "@repo/db";
 import { subscriptions } from "@repo/db/schema";
+
+const STRIPE = {
+  EVENTS: {
+    JOB_COMPLETED: "job_completed",
+  },
+};
 
 export class StripeProvider {
   private stripe: Stripe;
@@ -44,11 +50,10 @@ export class StripeProvider {
       throw new Error("Plan has no stripe price IDs configured");
     }
 
-    const session = await this.stripe.checkout.sessions.create({
+    const baseSession: Stripe.Checkout.SessionCreateParams = {
       ...(profile.externalCustomerId && {
         customer: profile.externalCustomerId,
       }),
-      ...(profile.email && { customer_email: profile.email }),
       mode: "subscription",
       line_items,
       subscription_data: {
@@ -57,7 +62,15 @@ export class StripeProvider {
       client_reference_id: profile.id.toString(),
       success_url: redirectUrls.success,
       cancel_url: redirectUrls.cancel,
-    });
+    };
+
+    // add email if no customerId - can't add both in Stripe
+    //
+    if (profile.email && !baseSession.customer) {
+      baseSession.customer_email = profile.email;
+    }
+
+    const session = await this.stripe.checkout.sessions.create(baseSession);
 
     if (!session.url) throw new Error("Stripe session creation failed");
 
@@ -69,7 +82,7 @@ export class StripeProvider {
    */
   async getSession(sessionId: string) {
     return await this.stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["subscription.items.data.price"], // Crucial for getting metered IDs
+      expand: ["subscription.items.data"], // Crucial for getting metered IDs
     });
   }
 
@@ -94,7 +107,7 @@ export class StripeProvider {
     // 2. Identify the Metered Item ID (the si_... ID)
     const meteredItem = stripeSubscription.items.data.find(
       (item) =>
-        item.price.billing_scheme === "per_unit" &&
+        item.price.billing_scheme === "tiered" &&
         item.price.recurring?.usage_type === "metered",
     );
 
@@ -157,6 +170,56 @@ export class StripeProvider {
       });
     } catch (error) {
       console.error("Billing Sync Failed. Transaction Rolled Back.", error);
+      throw error;
+    }
+  }
+
+  async reportUsage(
+    profileId: number,
+    customerId: string,
+    incrementBy: number = 1,
+  ) {
+    // 1. Fetch the external item ID from your DB
+    const sub = await db.query.subscriptions.findFirst({
+      where: eq(subscriptions.profileId, profileId),
+      columns: {
+        externalPriceItemId: true,
+        status: true,
+      },
+    });
+
+    // Only report if they have an active metered plan
+    if (!sub?.externalPriceItemId || sub.status !== "active") {
+      console.log("No metered subscription found for user.");
+      return;
+    }
+
+    try {
+      // 2. Report to Stripe (The "Source of Truth" for money)
+      // We use action: 'increment' so we don't have to keep track of total state here
+      await this.stripe.billing.meterEvents.create({
+        event_name: STRIPE.EVENTS.JOB_COMPLETED, // The meter's event name
+        payload: {
+          stripe_customer_id: customerId,
+          value: incrementBy.toString(), // Usage amount as string
+        },
+      });
+
+      // 3. Increment in your DB (The "Source of Truth" for your UI)
+      // We use a transaction or an atomic SQL increment to prevent race conditions
+      const [updatedSubscription] = await db
+        .update(subscriptions)
+        .set({
+          usageCount: sql`${subscriptions.usageCount} + ${incrementBy}`,
+        })
+        .where(eq(subscriptions.profileId, profileId))
+        .returning();
+
+      return updatedSubscription;
+    } catch (error) {
+      console.error("Failed to report usage to Stripe:", error);
+      // Logic choice: do you fail the job post if Stripe reporting fails?
+      // Usually, you log this and retry later to avoid blocking the user.
       throw error;
     }
   }

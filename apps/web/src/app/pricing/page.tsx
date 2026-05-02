@@ -11,6 +11,7 @@ import { Badge } from "@repo/ui/components/ui/badge";
 import { Icon } from "@repo/ui/components/ui/icon";
 import { createCheckoutAction, getPricingPlansAction } from "./actions";
 import { getProfileWithSubscriptionAction } from "../dashboard/profile/actions";
+import { CustomerBadge } from "@/components/shared/customer-badge";
 
 export default async function PricingPage() {
   const plans = await getPricingPlansAction();
@@ -76,11 +77,7 @@ export default async function PricingPage() {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="text-2xl">{tier.name}</CardTitle>
-                {tier.badge && (
-                  <Badge variant="secondary" className="font-semibold">
-                    {tier.badge}
-                  </Badge>
-                )}
+                {tier.badge && <CustomerBadge plan={tier.name} />}
               </div>
               <div className="mt-4 flex items-baseline">
                 <span className="text-4xl font-bold">${tier.price}</span>
